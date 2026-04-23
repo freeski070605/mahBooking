@@ -1,0 +1,25 @@
+{
+  "name": "mah-booking",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Full-stack booking platform for a solo beauty professional",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build": "npm run build --prefix client",
+    "seed": "npm run seed --prefix server"
+  },
+  "keywords": [
+    "react",
+    "vite",
+    "express",
+    "mongodb",
+    "beauty-booking"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

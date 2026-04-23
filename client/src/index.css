@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 67% 98%;
+    --foreground: 18 23% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 18 23% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 18 23% 13%;
+    --primary: 24 80% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 31 63% 92%;
+    --secondary-foreground: 18 23% 13%;
+    --muted: 32 45% 95%;
+    --muted-foreground: 22 14% 41%;
+    --accent: 28 65% 86%;
+    --accent-foreground: 18 23% 13%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 24 42% 87%;
+    --input: 24 42% 87%;
+    --ring: 24 80% 54%;
+    --radius: 1.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(242, 199, 165, 0.35), transparent 28%),
+      linear-gradient(180deg, #fffaf6 0%, #f7f0ea 48%, #fffaf7 100%);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  a {
+    @apply no-underline;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply container py-12 sm:py-16 lg:py-20;
+  }
+
+  .glass-panel {
+    @apply rounded-[2rem] border border-white/80 bg-white/85 shadow-panel backdrop-blur;
+  }
+
+  .field-hint {
+    @apply text-sm leading-6 text-ink-700/65;
+  }
+}
