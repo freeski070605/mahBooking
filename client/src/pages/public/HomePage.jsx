@@ -8,6 +8,7 @@ import { highlightFeatures, testimonials } from "@/data/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { LoadingBlock } from "@/components/shared/LoadingBlock";
 
@@ -127,7 +128,7 @@ export function HomePage() {
               <LoadingBlock key={item} lines={4} />
             ))}
           </div>
-        ) : (
+        ) : featuredServices.length ? (
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {featuredServices.map((service, index) => (
               <motion.div
@@ -176,6 +177,13 @@ export function HomePage() {
               </motion.div>
             ))}
           </div>
+        ) : (
+          <div className="mt-8">
+            <EmptyState
+              title="Service menu coming soon"
+              description="The business owner is updating the service menu. Check back soon or reach out directly for current availability."
+            />
+          </div>
         )}
       </section>
 
@@ -195,26 +203,39 @@ export function HomePage() {
               </p>
             </CardContent>
           </Card>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {featuredGallery.map((item) => (
-              <Card key={item._id} className="overflow-hidden">
-                <img
-                  src={item.imageUrl}
-                  alt={item.title || item.category}
-                  className="aspect-[4/5] w-full object-cover"
-                />
-                <CardContent className="space-y-2 p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-surface-600">
-                    {item.category}
-                  </p>
-                  <h3 className="text-xl font-semibold text-ink-900">
-                    {item.title || item.category}
-                  </h3>
-                  <p className="text-sm leading-6 text-ink-700/70">{item.caption}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {galleryQuery.isLoading ? (
+            <div className="grid gap-5 sm:grid-cols-2">
+              {[1, 2].map((item) => (
+                <LoadingBlock key={item} lines={3} />
+              ))}
+            </div>
+          ) : featuredGallery.length ? (
+            <div className="grid gap-5 sm:grid-cols-2">
+              {featuredGallery.map((item) => (
+                <Card key={item._id} className="overflow-hidden">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title || item.category}
+                    className="aspect-[4/5] w-full object-cover"
+                  />
+                  <CardContent className="space-y-2 p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-surface-600">
+                      {item.category}
+                    </p>
+                    <h3 className="text-xl font-semibold text-ink-900">
+                      {item.title || item.category}
+                    </h3>
+                    <p className="text-sm leading-6 text-ink-700/70">{item.caption}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="Gallery updates coming soon"
+              description="Fresh work will appear here once new images are uploaded to the portfolio."
+            />
+          )}
         </div>
       </section>
 

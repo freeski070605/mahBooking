@@ -50,6 +50,7 @@ const appointmentCreateSchema = z.object({
   startTime: z.string().regex(timeRegex),
   notes: z.string().trim().optional().default(""),
   internalNotes: z.string().trim().optional().default(""),
+  status: z.enum(APPOINTMENT_STATUSES).optional().default("pending"),
 });
 
 const appointmentUpdateSchema = z.object({

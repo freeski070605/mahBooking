@@ -27,8 +27,9 @@ const env = {
     process.env.CLOUDINARY_BRANDING_FOLDER || `${cloudinaryRootFolder}/branding`,
   uploadMaxFileSizeMb: Number(process.env.UPLOAD_MAX_FILE_SIZE_MB) || 5,
   seedAdminEmail:
-    process.env.SEED_ADMIN_EMAIL || "owner@mahbooking.com",
-  seedAdminPassword: process.env.SEED_ADMIN_PASSWORD || "MahBooking123!",
+    process.env.SEED_ADMIN_EMAIL || "owner@example.com",
+  seedAdminPassword:
+    process.env.SEED_ADMIN_PASSWORD || "ChangeThisPassword123!",
 };
 
 const cookieOptions = {

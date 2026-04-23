@@ -23,8 +23,8 @@ export function AdminLoginPage() {
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "owner@mahbooking.com",
-      password: "MahBooking123!",
+      email: "",
+      password: "",
     },
   });
 
@@ -72,8 +72,7 @@ export function AdminLoginPage() {
               </div>
             </div>
             <div className="rounded-[1.8rem] bg-white/10 p-5 text-sm leading-7 text-white/75">
-              Demo seed login: <span className="font-semibold text-white">owner@mahbooking.com</span>{" "}
-              / <span className="font-semibold text-white">MahBooking123!</span>
+              Use the admin email and password you set during setup or bootstrap.
             </div>
           </CardContent>
         </Card>

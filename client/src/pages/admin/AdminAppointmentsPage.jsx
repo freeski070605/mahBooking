@@ -1,18 +1,53 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarDays, CheckCircle2, CircleSlash2, Plus, RefreshCcw, UserRoundX } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  CircleSlash2,
+  Plus,
+  RefreshCcw,
+  UserRoundX,
+} from "lucide-react";
 import { toast } from "sonner";
 import { appointmentsApi, servicesApi } from "@/lib/api";
-import { formatAppointmentLabel, formatLongDate, formatTimeLabel, getErrorMessage, groupAppointmentsByDate } from "@/lib/utils";
+import {
+  formatAppointmentLabel,
+  formatLongDate,
+  formatTimeLabel,
+  getErrorMessage,
+  groupAppointmentsByDate,
+} from "@/lib/utils";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -54,8 +89,8 @@ export function AdminAppointmentsPage() {
   });
 
   const servicesQuery = useQuery({
-    queryKey: ["services"],
-    queryFn: () => servicesApi.list(),
+    queryKey: ["admin-appointment-services"],
+    queryFn: () => servicesApi.list({ scope: "all" }),
     select: (data) => data.services,
   });
 
@@ -75,10 +110,12 @@ export function AdminAppointmentsPage() {
       toast.success("Appointment created");
       queryClient.invalidateQueries({ queryKey: ["admin-appointments"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-summary"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
       setOpen(false);
       setDraft(emptyAppointment);
     },
-    onError: (error) => toast.error(getErrorMessage(error, "Unable to create appointment.")),
+    onError: (error) =>
+      toast.error(getErrorMessage(error, "Unable to create appointment.")),
   });
 
   const updateMutation = useMutation({
@@ -92,7 +129,8 @@ export function AdminAppointmentsPage() {
       setEditingAppointment(null);
       setDraft(emptyAppointment);
     },
-    onError: (error) => toast.error(getErrorMessage(error, "Unable to update appointment.")),
+    onError: (error) =>
+      toast.error(getErrorMessage(error, "Unable to update appointment.")),
   });
 
   const statusMutation = useMutation({
@@ -103,17 +141,20 @@ export function AdminAppointmentsPage() {
       queryClient.invalidateQueries({ queryKey: ["dashboard-summary"] });
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
-    onError: (error) => toast.error(getErrorMessage(error, "Unable to update status.")),
+    onError: (error) =>
+      toast.error(getErrorMessage(error, "Unable to update status.")),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => appointmentsApi.remove(id),
     onSuccess: () => {
-      toast.success("Appointment deleted");
+      toast.success("Appointment removed");
       queryClient.invalidateQueries({ queryKey: ["admin-appointments"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-summary"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
-    onError: (error) => toast.error(getErrorMessage(error, "Unable to delete appointment.")),
+    onError: (error) =>
+      toast.error(getErrorMessage(error, "Unable to remove appointment.")),
   });
 
   const appointments = appointmentsQuery.data || [];
@@ -158,10 +199,18 @@ export function AdminAppointmentsPage() {
       date: draft.date,
       startTime: draft.startTime,
       notes: draft.notes,
-      ...(editingAppointment ? { internalNotes: draft.internalNotes, status: draft.status } : {}),
+      internalNotes: draft.internalNotes,
+      status: draft.status,
     };
 
-    if (!payload.clientName || !payload.clientEmail || !payload.clientPhone || !payload.serviceId || !payload.date || !payload.startTime) {
+    if (
+      !payload.clientName ||
+      !payload.clientEmail ||
+      !payload.clientPhone ||
+      !payload.serviceId ||
+      !payload.date ||
+      !payload.startTime
+    ) {
       toast.error("Please complete the client, service, date, and time details.");
       return;
     }
@@ -185,12 +234,13 @@ export function AdminAppointmentsPage() {
               Keep the calendar clear and easy to manage
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-700/70">
-              Update statuses, reschedule visits, and add manual appointments without feeling buried in a complicated scheduler.
+              Add appointments to the schedule yourself, update visit details,
+              or remove bookings cleanly when plans change.
             </p>
           </div>
           <Button onClick={openCreate}>
             <Plus className="h-4 w-4" />
-            Manual appointment
+            Add to schedule
           </Button>
         </CardContent>
       </Card>
@@ -205,7 +255,10 @@ export function AdminAppointmentsPage() {
                 type="date"
                 value={filters.date}
                 onChange={(event) =>
-                  setFilters((current) => ({ ...current, date: event.target.value }))
+                  setFilters((current) => ({
+                    ...current,
+                    date: event.target.value,
+                  }))
                 }
               />
             </div>
@@ -214,7 +267,10 @@ export function AdminAppointmentsPage() {
               <Select
                 value={filters.status}
                 onValueChange={(value) =>
-                  setFilters((current) => ({ ...current, status: value }))
+                  setFilters((current) => ({
+                    ...current,
+                    status: value,
+                  }))
                 }
               >
                 <SelectTrigger>
@@ -246,8 +302,8 @@ export function AdminAppointmentsPage() {
         <EmptyState
           icon={CalendarDays}
           title="No appointments match these filters"
-          description="Try another date or status, or create a manual appointment to get started."
-          actionLabel="Create appointment"
+          description="Try another date or status, or add the first appointment to the schedule."
+          actionLabel="Add appointment"
           onAction={openCreate}
         />
       ) : (
@@ -277,29 +333,40 @@ export function AdminAppointmentsPage() {
                           <p>{formatAppointmentLabel(appointment.startAt)}</p>
                           <p>{appointment.clientEmail}</p>
                           <p>{appointment.clientPhone}</p>
-                          {appointment.notes ? <p>Client note: {appointment.notes}</p> : null}
+                          {appointment.notes ? (
+                            <p>Client note: {appointment.notes}</p>
+                          ) : null}
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-3">
-                        <Button variant="secondary" onClick={() => openEdit(appointment)}>
+                        <Button
+                          variant="secondary"
+                          onClick={() => openEdit(appointment)}
+                        >
                           <RefreshCcw className="h-4 w-4" />
                           Edit
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="outline">Delete</Button>
+                            <Button variant="outline">Remove</Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete this appointment?</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Remove this appointment from the schedule?
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                This permanently removes the record from the schedule.
+                                This permanently removes the booking record.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Keep appointment</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => deleteMutation.mutate(appointment._id)}>
-                                Delete appointment
+                              <AlertDialogAction
+                                onClick={() =>
+                                  deleteMutation.mutate(appointment._id)
+                                }
+                              >
+                                Remove appointment
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -309,13 +376,21 @@ export function AdminAppointmentsPage() {
                     <div className="flex flex-wrap gap-3">
                       {quickStatuses.map((item) => {
                         const Icon = item.icon;
+
                         return (
                           <Button
                             key={item.value}
                             type="button"
-                            variant={appointment.status === item.value ? "default" : "outline"}
+                            variant={
+                              appointment.status === item.value
+                                ? "default"
+                                : "outline"
+                            }
                             onClick={() =>
-                              statusMutation.mutate({ id: appointment._id, status: item.value })
+                              statusMutation.mutate({
+                                id: appointment._id,
+                                status: item.value,
+                              })
                             }
                           >
                             <Icon className="h-4 w-4" />
@@ -352,7 +427,8 @@ export function AdminAppointmentsPage() {
                           <div className="flex flex-wrap items-center justify-between gap-3">
                             <div>
                               <p className="font-semibold text-ink-900">
-                                {formatTimeLabel(appointment.startAt)} • {appointment.clientName}
+                                {formatTimeLabel(appointment.startAt)} -{" "}
+                                {appointment.clientName}
                               </p>
                               <p className="text-sm text-ink-700/70">
                                 {appointment.serviceSnapshot.name}
@@ -375,10 +451,13 @@ export function AdminAppointmentsPage() {
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingAppointment ? "Edit appointment" : "Create manual appointment"}
+              {editingAppointment
+                ? "Edit appointment"
+                : "Add appointment to the schedule"}
             </DialogTitle>
             <DialogDescription>
-              Use this for phone bookings, walk-ins, or schedule adjustments.
+              Use this for phone bookings, walk-ins, admin-added visits, or
+              schedule adjustments.
             </DialogDescription>
           </DialogHeader>
           <form className="space-y-6" onSubmit={submitAppointment}>
@@ -389,7 +468,10 @@ export function AdminAppointmentsPage() {
                   id="appointment-name"
                   value={draft.clientName}
                   onChange={(event) =>
-                    setDraft((current) => ({ ...current, clientName: event.target.value }))
+                    setDraft((current) => ({
+                      ...current,
+                      clientName: event.target.value,
+                    }))
                   }
                 />
               </div>
@@ -399,7 +481,10 @@ export function AdminAppointmentsPage() {
                   id="appointment-phone"
                   value={draft.clientPhone}
                   onChange={(event) =>
-                    setDraft((current) => ({ ...current, clientPhone: event.target.value }))
+                    setDraft((current) => ({
+                      ...current,
+                      clientPhone: event.target.value,
+                    }))
                   }
                 />
               </div>
@@ -410,7 +495,10 @@ export function AdminAppointmentsPage() {
                   type="email"
                   value={draft.clientEmail}
                   onChange={(event) =>
-                    setDraft((current) => ({ ...current, clientEmail: event.target.value }))
+                    setDraft((current) => ({
+                      ...current,
+                      clientEmail: event.target.value,
+                    }))
                   }
                 />
               </div>
@@ -419,7 +507,11 @@ export function AdminAppointmentsPage() {
                 <Select
                   value={draft.serviceId}
                   onValueChange={(value) =>
-                    setDraft((current) => ({ ...current, serviceId: value, startTime: "" }))
+                    setDraft((current) => ({
+                      ...current,
+                      serviceId: value,
+                      startTime: "",
+                    }))
                   }
                 >
                   <SelectTrigger>
@@ -428,7 +520,9 @@ export function AdminAppointmentsPage() {
                   <SelectContent>
                     {(servicesQuery.data || []).map((service) => (
                       <SelectItem key={service._id} value={service._id}>
-                        {service.name}
+                        {service.isActive
+                          ? service.name
+                          : `${service.name} (Inactive)`}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -444,7 +538,10 @@ export function AdminAppointmentsPage() {
                     setDraft((current) => ({
                       ...current,
                       date: event.target.value,
-                      startTime: current.date === event.target.value ? current.startTime : "",
+                      startTime:
+                        current.date === event.target.value
+                          ? current.startTime
+                          : "",
                     }))
                   }
                 />
@@ -459,7 +556,10 @@ export function AdminAppointmentsPage() {
                     key={slot.startAt}
                     type="button"
                     onClick={() =>
-                      setDraft((current) => ({ ...current, startTime: slot.startTime }))
+                      setDraft((current) => ({
+                        ...current,
+                        startTime: slot.startTime,
+                      }))
                     }
                     className={`rounded-[1.25rem] border px-4 py-4 text-sm font-semibold transition ${
                       draft.startTime === slot.startTime
@@ -482,6 +582,15 @@ export function AdminAppointmentsPage() {
                   </button>
                 ) : null}
               </div>
+              {draft.serviceId &&
+              draft.date &&
+              !slotsQuery.isLoading &&
+              !slotsQuery.data?.slots?.length ? (
+                <p className="text-sm leading-6 text-ink-700/70">
+                  No open slots were found for that date. Try another day,
+                  another service, or adjust availability first.
+                </p>
+              ) : null}
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
@@ -491,7 +600,10 @@ export function AdminAppointmentsPage() {
                   id="appointment-notes"
                   value={draft.notes}
                   onChange={(event) =>
-                    setDraft((current) => ({ ...current, notes: event.target.value }))
+                    setDraft((current) => ({
+                      ...current,
+                      notes: event.target.value,
+                    }))
                   }
                 />
               </div>
@@ -501,40 +613,51 @@ export function AdminAppointmentsPage() {
                   id="appointment-internal"
                   value={draft.internalNotes}
                   onChange={(event) =>
-                    setDraft((current) => ({ ...current, internalNotes: event.target.value }))
+                    setDraft((current) => ({
+                      ...current,
+                      internalNotes: event.target.value,
+                    }))
                   }
                 />
               </div>
             </div>
 
-            {editingAppointment ? (
-              <div className="space-y-2">
-                <Label>Status</Label>
-                <Select
-                  value={draft.status}
-                  onValueChange={(value) =>
-                    setDraft((current) => ({ ...current, status: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="canceled">Canceled</SelectItem>
-                    <SelectItem value="no-show">No-show</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : null}
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <Select
+                value={draft.status}
+                onValueChange={(value) =>
+                  setDraft((current) => ({
+                    ...current,
+                    status: value,
+                  }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="confirmed">Confirmed</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="canceled">Canceled</SelectItem>
+                  <SelectItem value="no-show">No-show</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-                {editingAppointment ? "Save changes" : "Create appointment"}
+              <Button
+                type="submit"
+                disabled={createMutation.isPending || updateMutation.isPending}
+              >
+                {editingAppointment ? "Save changes" : "Add appointment"}
               </Button>
-              <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
             </div>

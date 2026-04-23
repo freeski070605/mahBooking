@@ -64,10 +64,11 @@ async function syncClientProfile({
   return client;
 }
 
-async function resolveServiceSnapshot(serviceId) {
+async function resolveServiceSnapshot(serviceId, options = {}) {
+  const { allowInactive = false } = options;
   const service = await Service.findById(serviceId);
 
-  if (!service || !service.isActive) {
+  if (!service || (!service.isActive && !allowInactive)) {
     throw new ApiError(
       400,
       "That service is no longer available for booking. Please choose another one.",
@@ -144,9 +145,12 @@ async function getAppointment(req, res) {
 
 async function getAvailableSlots(req, res) {
   const { serviceId, date } = req.query;
+  const isAdminRequest = req.user?.role === "admin";
   const availability = await ensureAvailability();
   const settings = await ensureBusinessSettings();
-  const { service } = await resolveServiceSnapshot(serviceId);
+  const { service } = await resolveServiceSnapshot(serviceId, {
+    allowInactive: isAdminRequest,
+  });
 
   const bookingWindowDays =
     availability.bookingWindowDays || settings.bookingSettings.bookingWindowDays;
@@ -158,7 +162,10 @@ async function getAvailableSlots(req, res) {
   const today = dayjs().startOf("day");
   const lastBookableDate = today.add(bookingWindowDays, "day");
 
-  if (selectedDate.isBefore(today) || selectedDate.isAfter(lastBookableDate)) {
+  if (
+    !isAdminRequest &&
+    (selectedDate.isBefore(today) || selectedDate.isAfter(lastBookableDate))
+  ) {
     res.json({ slots: [] });
     return;
   }
@@ -174,7 +181,11 @@ async function getAvailableSlots(req, res) {
     date,
     service,
     timezoneName: availability.timezone,
-  }).filter((slot) => dayjs(slot.startAt).diff(dayjs(), "hour", true) >= advanceNoticeHours);
+  }).filter((slot) =>
+    isAdminRequest
+      ? true
+      : dayjs(slot.startAt).diff(dayjs(), "hour", true) >= advanceNoticeHours,
+  );
 
   res.json({
     date,
@@ -190,6 +201,7 @@ async function getAvailableSlots(req, res) {
 }
 
 async function createAppointment(req, res) {
+  const isAdminRequest = req.user?.role === "admin";
   const {
     clientName,
     clientEmail,
@@ -199,9 +211,12 @@ async function createAppointment(req, res) {
     startTime,
     notes,
     internalNotes,
+    status,
   } = req.body;
   const availability = await ensureAvailability();
-  const { service, snapshot } = await resolveServiceSnapshot(serviceId);
+  const { service, snapshot } = await resolveServiceSnapshot(serviceId, {
+    allowInactive: isAdminRequest,
+  });
 
   const appointments = await Appointment.find({
     appointmentDate: date,
@@ -244,7 +259,8 @@ async function createAppointment(req, res) {
     email: clientEmail,
     phone: clientPhone,
     notes,
-    internalNotes: req.user?.role === "admin" ? internalNotes : undefined,
+    internalNotes: isAdminRequest ? internalNotes : undefined,
+    status: isAdminRequest ? status : undefined,
     startAt: slot.startAt,
   });
 
@@ -263,10 +279,10 @@ async function createAppointment(req, res) {
     startAt: slot.startAt,
     endAt: slot.endAt,
     bufferEndAt: slot.bufferEndAt,
-    status: req.user?.role === "admin" ? "confirmed" : "pending",
+    status: isAdminRequest ? status || "confirmed" : "pending",
     notes,
-    internalNotes: req.user?.role === "admin" ? internalNotes || "" : "",
-    source: req.user?.role === "admin" ? "admin" : "client",
+    internalNotes: isAdminRequest ? internalNotes || "" : "",
+    source: isAdminRequest ? "admin" : "client",
   });
 
   res.status(201).json({ appointment });
@@ -325,7 +341,9 @@ async function updateAppointment(req, res) {
   let nextSnapshot = appointment.serviceSnapshot;
 
   if (req.body.serviceId) {
-    const resolved = await resolveServiceSnapshot(req.body.serviceId);
+    const resolved = await resolveServiceSnapshot(req.body.serviceId, {
+      allowInactive: isAdmin,
+    });
     nextService = resolved.service;
     nextSnapshot = resolved.snapshot;
   } else {

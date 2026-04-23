@@ -4,19 +4,32 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, CalendarDays, CheckCircle2, Clock3 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+} from "lucide-react";
+import { toast } from "sonner";
 import { appointmentsApi, servicesApi, settingsApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
-import { formatAppointmentLabel, formatCurrency, formatDuration, formatLongDate, getErrorMessage } from "@/lib/utils";
-import { PageIntro } from "@/components/shared/PageIntro";
+import {
+  formatAppointmentLabel,
+  formatCurrency,
+  formatDuration,
+  formatLongDate,
+  getErrorMessage,
+} from "@/lib/utils";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { LoadingBlock } from "@/components/shared/LoadingBlock";
+import { PageIntro } from "@/components/shared/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 
 const bookingSchema = z.object({
   clientName: z.string().trim().min(2, "Please enter your name."),
@@ -61,7 +74,10 @@ export function BookingPage() {
     const presetServiceId = location.state?.serviceId;
 
     if (presetServiceId) {
-      const match = servicesQuery.data.find((item) => item._id === presetServiceId);
+      const match = servicesQuery.data.find(
+        (item) => item._id === presetServiceId,
+      );
+
       if (match) {
         setSelectedService(match);
         setStep(2);
@@ -69,7 +85,12 @@ export function BookingPage() {
     }
   }, [location.state, servicesQuery.data]);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       clientName: user?.name || "",
@@ -162,7 +183,9 @@ export function BookingPage() {
       {step === 1 ? (
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-4xl text-ink-900">Choose your service</h2>
+            <h2 className="font-display text-4xl text-ink-900">
+              Choose your service
+            </h2>
             <p className="text-sm text-ink-700/65">Tap a service to continue</p>
           </div>
           {servicesQuery.isLoading ? (
@@ -171,9 +194,14 @@ export function BookingPage() {
                 <LoadingBlock key={item} lines={4} />
               ))}
             </div>
+          ) : !servicesQuery.data?.length ? (
+            <EmptyState
+              title="No services are bookable right now"
+              description="The service menu is being updated. Please check back soon or contact the business directly."
+            />
           ) : (
             <div className="grid gap-5 lg:grid-cols-3">
-              {servicesQuery.data?.map((service) => (
+              {servicesQuery.data.map((service) => (
                 <button
                   key={service._id}
                   type="button"
@@ -203,7 +231,9 @@ export function BookingPage() {
                         {formatCurrency(service.price)}
                       </p>
                     </div>
-                    <p className="text-sm leading-7 text-ink-700/75">{service.description}</p>
+                    <p className="text-sm leading-7 text-ink-700/75">
+                      {service.description}
+                    </p>
                     <div className="flex items-center gap-4 text-sm text-ink-700/65">
                       <span className="inline-flex items-center gap-2">
                         <Clock3 className="h-4 w-4" />
@@ -239,7 +269,9 @@ export function BookingPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
                   {selectedService.category}
                 </p>
-                <h2 className="text-3xl font-semibold text-ink-900">{selectedService.name}</h2>
+                <h2 className="text-3xl font-semibold text-ink-900">
+                  {selectedService.name}
+                </h2>
                 <p className="text-sm leading-7 text-ink-700/75">
                   {selectedService.description}
                 </p>
@@ -254,9 +286,12 @@ export function BookingPage() {
           <Card>
             <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
-                <h2 className="font-display text-4xl text-ink-900">Choose your date and time</h2>
+                <h2 className="font-display text-4xl text-ink-900">
+                  Choose your date and time
+                </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  Only valid times are shown, based on business hours, breaks, blocked time, and existing appointments.
+                  Only valid times are shown, based on business hours, breaks,
+                  blocked time, and existing appointments.
                 </p>
               </div>
               <div className="space-y-2">
@@ -321,9 +356,12 @@ export function BookingPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
                   Appointment summary
                 </p>
-                <h2 className="text-2xl font-semibold text-ink-900">{selectedService.name}</h2>
+                <h2 className="text-2xl font-semibold text-ink-900">
+                  {selectedService.name}
+                </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  {formatCurrency(selectedService.price)} • {formatDuration(selectedService.durationMinutes)}
+                  {formatCurrency(selectedService.price)} -{" "}
+                  {formatDuration(selectedService.durationMinutes)}
                 </p>
               </div>
               <div className="rounded-[1.6rem] bg-surface-50 p-4 text-sm leading-7 text-ink-700/75">
@@ -341,9 +379,12 @@ export function BookingPage() {
           <Card>
             <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
-                <h2 className="font-display text-4xl text-ink-900">Enter your details</h2>
+                <h2 className="font-display text-4xl text-ink-900">
+                  Enter your details
+                </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  This helps MAH Booking hold your appointment request and keep you updated.
+                  This helps MAH Booking hold your appointment request and keep
+                  you updated.
                 </p>
               </div>
               <form className="grid gap-5" onSubmit={handleSubmit(submitBooking)}>
@@ -352,14 +393,18 @@ export function BookingPage() {
                     <Label htmlFor="clientName">Full name</Label>
                     <Input id="clientName" {...register("clientName")} />
                     {errors.clientName ? (
-                      <p className="text-sm text-rose-600">{errors.clientName.message}</p>
+                      <p className="text-sm text-rose-600">
+                        {errors.clientName.message}
+                      </p>
                     ) : null}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="clientPhone">Phone</Label>
                     <Input id="clientPhone" {...register("clientPhone")} />
                     {errors.clientPhone ? (
-                      <p className="text-sm text-rose-600">{errors.clientPhone.message}</p>
+                      <p className="text-sm text-rose-600">
+                        {errors.clientPhone.message}
+                      </p>
                     ) : null}
                   </div>
                 </div>
@@ -367,7 +412,9 @@ export function BookingPage() {
                   <Label htmlFor="clientEmail">Email</Label>
                   <Input id="clientEmail" type="email" {...register("clientEmail")} />
                   {errors.clientEmail ? (
-                    <p className="text-sm text-rose-600">{errors.clientEmail.message}</p>
+                    <p className="text-sm text-rose-600">
+                      {errors.clientEmail.message}
+                    </p>
                   ) : null}
                 </div>
                 <div className="space-y-2">
@@ -383,7 +430,11 @@ export function BookingPage() {
                     {bookMutation.isPending ? "Submitting..." : "Confirm booking"}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
-                  <Button type="button" variant="secondary" onClick={() => setStep(2)}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setStep(2)}
+                  >
                     Change time
                   </Button>
                 </div>
@@ -404,8 +455,12 @@ export function BookingPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.32em] text-surface-600">
                   Booking request received
                 </p>
-                <h2 className="font-display text-5xl text-ink-900">You're all set.</h2>
-                <p className="text-base leading-7 text-ink-700/80">{confirmationMessage}</p>
+                <h2 className="font-display text-5xl text-ink-900">
+                  You're all set.
+                </h2>
+                <p className="text-base leading-7 text-ink-700/80">
+                  {confirmationMessage}
+                </p>
               </div>
               <div className="rounded-[1.8rem] bg-surface-50 p-6 text-left">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -440,7 +495,13 @@ export function BookingPage() {
                 >
                   Book another service
                 </Button>
-                <Button type="button" variant="secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                >
                   Review details
                 </Button>
               </div>
