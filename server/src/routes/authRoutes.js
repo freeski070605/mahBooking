@@ -5,7 +5,6 @@ const {
   logout,
   me,
 } = require("../controllers/authController");
-const { requireAuth } = require("../middleware/auth");
 const { validate } = require("../middleware/validate");
 const {
   authLoginSchema,
@@ -17,6 +16,6 @@ const router = express.Router();
 router.post("/register", validate(authRegisterSchema), register);
 router.post("/login", validate(authLoginSchema), login);
 router.post("/logout", logout);
-router.get("/me", requireAuth, me);
+router.get("/me", me);
 
 module.exports = router;

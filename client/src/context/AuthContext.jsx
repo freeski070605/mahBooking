@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { authApi } from "@/lib/api";
+import {
+  clearStoredAuthToken,
+  setStoredAuthToken,
+} from "@/lib/authToken";
 
 const AuthContext = createContext(null);
 
@@ -17,9 +21,12 @@ export function AuthProvider({ children }) {
           setUser(data.user);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         if (active) {
           setUser(null);
+          if (error?.response?.status === 401) {
+            clearStoredAuthToken();
+          }
         }
       })
       .finally(() => {
@@ -41,16 +48,22 @@ export function AuthProvider({ children }) {
       isAdmin: user?.role === "admin",
       async login(payload) {
         const data = await authApi.login(payload);
+        setStoredAuthToken(data.token);
         setUser(data.user);
         return data.user;
       },
       async register(payload) {
         const data = await authApi.register(payload);
+        setStoredAuthToken(data.token);
         setUser(data.user);
         return data.user;
       },
       async logout() {
-        await authApi.logout();
+        try {
+          await authApi.logout();
+        } finally {
+          clearStoredAuthToken();
+        }
         setUser(null);
       },
     }),

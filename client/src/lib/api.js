@@ -1,8 +1,21 @@
 import axios from "axios";
+import { getStoredAuthToken } from "@/lib/authToken";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api",
   withCredentials: true,
+});
+
+api.interceptors.request.use((config) => {
+  const token = getStoredAuthToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else if (config.headers?.Authorization) {
+    delete config.headers.Authorization;
+  }
+
+  return config;
 });
 
 function unwrap(response) {

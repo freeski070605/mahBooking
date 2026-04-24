@@ -78,7 +78,7 @@ async function logout(_req, res) {
 
 async function me(req, res) {
   res.json({
-    user: sanitizeUser(req.user),
+    user: req.user ? sanitizeUser(req.user) : null,
   });
 }
 
