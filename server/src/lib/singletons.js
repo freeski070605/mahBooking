@@ -4,6 +4,7 @@ const { env } = require("../config/env");
 const {
   buildDefaultBusinessSettings,
   buildDefaultWeeklyHours,
+  refreshLegacyBusinessCopy,
 } = require("./defaults");
 
 async function ensureAvailability() {
@@ -25,7 +26,7 @@ async function ensureAvailability() {
 }
 
 async function ensureBusinessSettings() {
-  return BusinessSettings.findOneAndUpdate(
+  const settings = await BusinessSettings.findOneAndUpdate(
     { key: "default" },
     {
       $setOnInsert: buildDefaultBusinessSettings(),
@@ -36,6 +37,8 @@ async function ensureBusinessSettings() {
       setDefaultsOnInsert: true,
     },
   );
+
+  return refreshLegacyBusinessCopy(settings);
 }
 
 module.exports = { ensureAvailability, ensureBusinessSettings };

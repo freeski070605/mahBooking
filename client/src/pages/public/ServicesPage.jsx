@@ -32,8 +32,8 @@ export function ServicesPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <PageIntro
           eyebrow="Service menu"
-          title="Premium hair services with graceful room to expand."
-          description="Every service is presented with beautiful spacing, imagery, and clear details so clients can book confidently on mobile or desktop."
+          title="Services chosen with healthy hair and polished finishes in mind."
+          description="Browse the current menu, compare timing and pricing, and choose the appointment that fits the care or look you're after."
         />
         <div className="w-full max-w-xs">
           <Select value={category} onValueChange={setCategory}>
@@ -97,8 +97,8 @@ export function ServicesPage() {
         </div>
       ) : (
         <EmptyState
-          title="No services match that category yet."
-          description="Try a different category or come back soon as the menu grows into future esthetician services."
+          title="Nothing matches that filter yet."
+          description="Try another category to see the full service menu."
         />
       )}
     </div>

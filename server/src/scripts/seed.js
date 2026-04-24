@@ -50,9 +50,6 @@ async function seed() {
   await BusinessSettings.create({
     ...buildDefaultBusinessSettings(),
     businessName: "MAH Booking",
-    tagline: "Luxury care for healthy hair today, skin rituals tomorrow.",
-    description:
-      "A boutique booking experience for a solo beauty professional offering elevated hair services now and esthetician services in the next phase of growth.",
     contactEmail: "hello@mahbooking.com",
     contactPhone: "(555) 274-5612",
     address: "Atlanta, GA",

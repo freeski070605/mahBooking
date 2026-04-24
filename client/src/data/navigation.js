@@ -14,7 +14,7 @@ export const publicNavigation = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Booking", href: "/booking" },
+  { label: "Book", href: "/booking" },
   { label: "Policies", href: "/policies" },
   { label: "Contact", href: "/contact" },
 ];
@@ -30,9 +30,9 @@ export const adminNavigation = [
 ];
 
 export const highlightFeatures = [
-  "Smooth mobile booking flow",
-  "Built for solo beauty professionals",
-  "Future-ready for esthetician services",
+  "Healthy hair-first service details",
+  "Live availability without the back-and-forth",
+  "A calm, polished studio experience",
 ];
 
 export const dashboardQuickActions = [
@@ -62,22 +62,22 @@ export const dashboardQuickActions = [
   },
 ];
 
-export const testimonials = [
+export const experiencePillars = [
   {
-    name: "Client experience",
-    quote:
-      "A luxury service should start long before the appointment itself. This flow feels calm, polished, and easy.",
+    name: "Healthy hair first",
+    description:
+      "Every appointment is grounded in care, condition, and a finish that keeps your hair looking and feeling its best.",
   },
   {
-    name: "Brand presence",
-    quote:
-      "Everything is designed to look elevated, warm, and intentional without feeling overdone.",
+    name: "Calm from booking to chair",
+    description:
+      "Clear timing, easy booking, and thoughtful communication help the full experience feel effortless.",
   },
 ];
 
 export const brandTagline = {
-  title: "Luxury care for healthy hair today, skin rituals tomorrow.",
+  title: "Healthy hair care, polished styling, and a calm studio rhythm.",
   description:
-    "MAH Booking blends polished beauty branding with a booking flow made for real clients and a dashboard gentle enough for a first-time business owner.",
+    "MAH Booking pairs warm beauty branding with clear service details and an easy booking path clients can trust.",
   icon: Sparkles,
 };

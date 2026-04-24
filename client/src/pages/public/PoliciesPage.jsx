@@ -24,7 +24,7 @@ export function PoliciesPage() {
       description: settings?.policies?.lateness,
     },
     {
-      title: "Deposit support",
+      title: "Deposit details",
       icon: WalletCards,
       description: settings?.policies?.deposit,
     },
@@ -34,8 +34,8 @@ export function PoliciesPage() {
     <div className="page-shell space-y-10">
       <PageIntro
         eyebrow="Policies"
-        title="Clear expectations that still feel thoughtful and human."
-        description="Policies are written in straightforward language so clients understand how to protect their appointment time and what to expect before arriving."
+        title="A few simple policies for a smoother visit."
+        description="These details protect your appointment time and help the day stay calm, clear, and on schedule."
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -60,10 +60,10 @@ export function PoliciesPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-surface-600">
             Before you book
           </p>
-          <h2 className="font-display text-5xl text-ink-900">A smooth visit starts with a little prep.</h2>
+          <h2 className="font-display text-5xl text-ink-900">A little prep goes a long way.</h2>
           <p className="max-w-3xl text-base leading-8 text-ink-700/80">
             {settings?.policies?.expectations ||
-              "Arrive ready for your selected service and review any preparation notes ahead of time. These expectations help appointments stay on schedule and feel relaxed once you arrive."}
+              "Please arrive with hair ready for your selected service unless prep is included. Review any service notes before booking so your visit begins smoothly."}
           </p>
         </CardContent>
       </Card>

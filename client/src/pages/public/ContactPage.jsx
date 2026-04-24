@@ -26,7 +26,9 @@ export function ContactPage() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    toast.success("Message captured locally. Connect a contact endpoint when ready.");
+    toast.success(
+      "Your note was saved locally. For a reply, please use the phone, email, or Instagram details on this page for now.",
+    );
     setForm({ name: "", email: "", message: "" });
   }
 
@@ -58,8 +60,8 @@ export function ContactPage() {
       <div className="space-y-6">
         <PageIntro
           eyebrow="Contact"
-          title="Reach out without hunting for the basics."
-          description="Contact information, social links, and a simple inquiry form are presented with the same polished tone as the booking flow."
+          title="Reach out if you want details before you book."
+          description="Questions about services, prep, or availability? The quickest ways to connect are listed here."
         />
         <div className="grid gap-4">
           {contactCards.map((item) => {
@@ -88,7 +90,8 @@ export function ContactPage() {
           <div className="space-y-2">
             <h2 className="font-display text-4xl text-ink-900">Send a note</h2>
             <p className="text-sm leading-6 text-ink-700/70">
-              Use this as a soft inquiry form today, or connect it to email later.
+              The direct contact details on the left are the best way to get a
+              response while this inquiry form is still being connected.
             </p>
           </div>
           <form className="space-y-5" onSubmit={handleSubmit}>

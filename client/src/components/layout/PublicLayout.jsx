@@ -25,7 +25,7 @@ export function PublicLayout() {
             <div>
               <div className="font-display text-2xl leading-none">MAH Booking</div>
               <div className="text-xs uppercase tracking-[0.3em] text-ink-700/55">
-                Beauty studio
+                Healthy hair studio
               </div>
             </div>
           </NavLink>
@@ -50,7 +50,9 @@ export function PublicLayout() {
           <div className="hidden items-center gap-3 lg:flex">
             <Button variant="ghost" asChild>
               <NavLink to="/account">
-                {isAuthenticated ? user?.name?.split(" ")[0] || "Account" : "Client login"}
+                {isAuthenticated
+                  ? user?.name?.split(" ")[0] || "My account"
+                  : "Client account"}
               </NavLink>
             </Button>
             {isAdmin ? (
@@ -70,7 +72,7 @@ export function PublicLayout() {
               </Button>
             </DialogTrigger>
             <DialogContent className="w-[min(92vw,420px)]">
-              <DialogTitle className="font-display text-3xl">Explore MAH</DialogTitle>
+              <DialogTitle className="font-display text-3xl">Explore the studio</DialogTitle>
               <div className="mt-6 flex flex-col gap-3">
                 {publicNavigation.map((item) => (
                   <NavLink
@@ -110,9 +112,8 @@ export function PublicLayout() {
           <div className="space-y-4">
             <p className="font-display text-3xl text-ink-900">MAH Booking</p>
             <p className="max-w-md text-sm leading-7 text-ink-700/75">
-              A premium solo beauty booking experience built for healthy hair,
-              polished appointments, and a graceful path into future esthetician
-              services.
+              Healthy hair care, polished styling, and a booking experience that
+              feels warm from the first click.
             </p>
           </div>
           <div className="space-y-3">
@@ -135,7 +136,7 @@ export function PublicLayout() {
             </p>
             <p className="text-sm text-ink-700/75">hello@mahbooking.com</p>
             <p className="text-sm text-ink-700/75">(555) 274-5612</p>
-            <p className="text-sm text-ink-700/75">Atlanta, Georgia</p>
+            <p className="text-sm text-ink-700/75">Atlanta, GA</p>
           </div>
         </div>
       </footer>

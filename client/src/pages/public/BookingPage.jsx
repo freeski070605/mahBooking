@@ -158,8 +158,8 @@ export function BookingPage() {
       <div className="space-y-6">
         <PageIntro
           eyebrow="Booking"
-          title="A clear step-by-step booking flow designed for phones first."
-          description="Choose your service, see only real available times, and confirm in a few calm, polished steps."
+          title="Book in a few easy steps."
+          description="Choose your service, pick from live availability, and send your request without the usual back-and-forth."
         />
         <div className="glass-panel p-6">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -186,7 +186,7 @@ export function BookingPage() {
             <h2 className="font-display text-4xl text-ink-900">
               Choose your service
             </h2>
-            <p className="text-sm text-ink-700/65">Tap a service to continue</p>
+            <p className="text-sm text-ink-700/65">Select the appointment that fits your visit</p>
           </div>
           {servicesQuery.isLoading ? (
             <div className="grid gap-5 lg:grid-cols-3">
@@ -197,7 +197,7 @@ export function BookingPage() {
           ) : !servicesQuery.data?.length ? (
             <EmptyState
               title="No services are bookable right now"
-              description="The service menu is being updated. Please check back soon or contact the business directly."
+              description="The service menu is being updated. Please check back soon or reach out to the studio directly."
             />
           ) : (
             <div className="grid gap-5 lg:grid-cols-3">
@@ -290,12 +290,12 @@ export function BookingPage() {
                   Choose your date and time
                 </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  Only valid times are shown, based on business hours, breaks,
-                  blocked time, and existing appointments.
+                  Only live availability is shown, based on studio hours,
+                  breaks, blocked time, and existing appointments.
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="booking-date">Preferred date</Label>
+                <Label htmlFor="booking-date">Select a date</Label>
                 <Input
                   id="booking-date"
                   type="date"
@@ -383,8 +383,8 @@ export function BookingPage() {
                   Enter your details
                 </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  This helps MAH Booking hold your appointment request and keep
-                  you updated.
+                  Share your details so the studio can hold your request and
+                  keep you updated.
                 </p>
               </div>
               <form className="grid gap-5" onSubmit={handleSubmit(submitBooking)}>
@@ -421,7 +421,7 @@ export function BookingPage() {
                   <Label htmlFor="notes">Appointment notes</Label>
                   <Textarea
                     id="notes"
-                    placeholder="Anything you'd like the stylist to know before your visit?"
+                    placeholder="Anything you'd like the studio to know before your visit?"
                     {...register("notes")}
                   />
                 </div>
@@ -456,7 +456,7 @@ export function BookingPage() {
                   Booking request received
                 </p>
                 <h2 className="font-display text-5xl text-ink-900">
-                  You're all set.
+                  Your request is in.
                 </h2>
                 <p className="text-base leading-7 text-ink-700/80">
                   {confirmationMessage}
@@ -493,7 +493,7 @@ export function BookingPage() {
                     setConfirmedAppointment(null);
                   }}
                 >
-                  Book another service
+                  Book another appointment
                 </Button>
                 <Button
                   type="button"

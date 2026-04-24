@@ -176,18 +176,18 @@ export function AccountPage() {
         <div className="space-y-6">
           <PageIntro
             eyebrow="Client account"
-            title="Sign in to see upcoming visits, past appointments, and online changes."
-            description="Clients can create an account for a more seamless beauty experience without making the booking flow feel heavy or required."
+            title="Sign in to keep upcoming visits, past appointments, and changes in one place."
+            description="Create an account if you'd like an easier way to review appointment details or request eligible updates online."
           />
           <Card className="bg-ink-900 text-white">
             <CardContent className="space-y-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white">
                 <UserRound className="h-5 w-5" />
               </div>
-              <h2 className="font-display text-4xl">Convenience, not clutter.</h2>
+              <h2 className="font-display text-4xl">Everything stays close at hand.</h2>
               <p className="text-sm leading-7 text-white/75">
-                Accounts make it easy to revisit appointment details and request
-                changes within the allowed booking window.
+                Use your account to revisit appointment details, track status,
+                and request changes inside the allowed window.
               </p>
             </CardContent>
           </Card>
@@ -197,8 +197,8 @@ export function AccountPage() {
           <CardContent className="p-6">
             <Tabs defaultValue="login">
               <TabsList>
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Sign up</TabsTrigger>
+                <TabsTrigger value="login">Sign in</TabsTrigger>
+                <TabsTrigger value="register">Create account</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
@@ -298,7 +298,7 @@ export function AccountPage() {
       <PageIntro
         eyebrow="Your account"
         title={`Welcome back, ${user?.name?.split(" ")[0] || "there"}.`}
-        description="Review upcoming visits, check your appointment history, and request changes inside the allowed time window."
+        description="Review upcoming visits, check your appointment history, and request changes while they're still inside the allowed window."
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -316,7 +316,7 @@ export function AccountPage() {
         </Card>
         <Card>
           <CardContent className="space-y-2 p-6">
-            <p className="text-sm text-ink-700/65">Change window</p>
+            <p className="text-sm text-ink-700/65">Online change window</p>
             <div className="text-3xl font-semibold text-ink-900">
               {settingsQuery.data?.settings?.bookingSettings?.allowClientRescheduleHours || 24} hrs
             </div>
@@ -405,7 +405,7 @@ export function AccountPage() {
             ) : (
               <EmptyState
                 title="You don't have any upcoming appointments."
-                description="Once you book your next service, it will appear here with easy access to timing and status."
+                description="Your next appointment will appear here with timing, status, and change options."
               />
             )}
           </TabsContent>
@@ -434,7 +434,7 @@ export function AccountPage() {
             ) : (
               <EmptyState
                 title="No appointment history yet."
-                description="Past appointments and canceled visits will show up here."
+                description="Past appointments and canceled visits will show up here once you have them."
               />
             )}
           </TabsContent>

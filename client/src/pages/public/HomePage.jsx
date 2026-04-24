@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowRight, Quote, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { galleryApi, servicesApi, settingsApi } from "@/lib/api";
 import { formatCurrency, formatDuration } from "@/lib/utils";
-import { highlightFeatures, testimonials } from "@/data/navigation";
+import { experiencePillars, highlightFeatures } from "@/data/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,21 +45,21 @@ export function HomePage() {
             className="space-y-8"
           >
             <Badge className="rounded-full px-4 py-2 text-[0.68rem] tracking-[0.26em]">
-              Hair appointments with a premium feel
+              Healthy hair. Soft luxury. Thoughtful care.
             </Badge>
             <div className="space-y-5">
               <h1 className="max-w-3xl font-display text-6xl leading-[0.95] text-ink-900 sm:text-7xl">
-                Book polished beauty appointments with warmth, ease, and style.
+                Healthy hair appointments with a polished, easy rhythm.
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-ink-700/80">
                 {settings?.tagline ||
-                  "A modern solo beauty studio experience for healthy hair, refined styling, and future-ready esthetician growth."}
+                  "Healthy hair, polished finishes, and care that feels calm from start to finish."}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/booking">
-                  Book your appointment
+                  Reserve your appointment
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -103,7 +103,7 @@ export function HomePage() {
                       Signature experience
                     </p>
                     <p className="mt-2 font-display text-3xl text-ink-900">
-                      Soft luxury with an orange glow
+                      Calm care, polished finishes, warm detail
                     </p>
                   </div>
                   <div className="rounded-full bg-surface-500 p-3 text-white">
@@ -119,8 +119,8 @@ export function HomePage() {
       <section className="page-shell pt-6">
         <SectionHeading
           eyebrow="Featured services"
-          title="Hair services presented with a boutique feel."
-          description="Current hair offerings are front and center, while the system already leaves room for brows, facials, and future esthetician services."
+          title="Choose the service that fits your next look."
+          description="Pricing, timing, and service details are laid out clearly so booking feels simple from the start."
         />
         {servicesQuery.isLoading ? (
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -181,7 +181,7 @@ export function HomePage() {
           <div className="mt-8">
             <EmptyState
               title="Service menu coming soon"
-              description="The business owner is updating the service menu. Check back soon or reach out directly for current availability."
+              description="The service menu is being refreshed. Check back soon or reach out for current availability."
             />
           </div>
         )}
@@ -192,14 +192,14 @@ export function HomePage() {
           <Card className="bg-ink-900 text-white">
             <CardContent className="space-y-5 p-8">
               <Badge variant="outline" className="border-white/20 text-white">
-                Brand story
+                The studio
               </Badge>
               <h2 className="font-display text-5xl leading-none">
-                Crafted for a solo beauty professional with room to grow.
+                Beauty care that feels elevated without feeling distant.
               </h2>
               <p className="text-sm leading-7 text-white/75">
                 {settings?.description ||
-                  "MAH Booking supports the current hair service menu while already making space for esthetician services later, so the business can evolve without rebuilding the brand experience."}
+                  "MAH Booking is a warm beauty studio where healthy hair care, refined styling, and thoughtful timing come together in an elevated appointment experience."}
               </p>
             </CardContent>
           </Card>
@@ -233,7 +233,7 @@ export function HomePage() {
           ) : (
             <EmptyState
               title="Gallery updates coming soon"
-              description="Fresh work will appear here once new images are uploaded to the portfolio."
+              description="New work is on the way. Check back soon for recent finishes and studio favorites."
             />
           )}
         </div>
@@ -242,8 +242,8 @@ export function HomePage() {
       <section className="page-shell">
         <SectionHeading
           eyebrow="Policies preview"
-          title="Professional expectations with a soft, clear tone."
-          description="Policies are easy to review before booking so clients feel informed without feeling intimidated."
+          title="Clear policies, shared with care."
+          description="Everything you need before booking is simple, direct, and easy to review."
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
           {[
@@ -275,17 +275,17 @@ export function HomePage() {
 
       <section className="page-shell pt-0">
         <SectionHeading
-          eyebrow="Testimonials ready"
-          title="Space for social proof and polished client feedback."
-          description="The layout already supports testimonials so the brand can grow into stronger client trust over time."
+          eyebrow="The MAH experience"
+          title="What a visit should feel like."
+          description="Every part of the visit is shaped around comfort, clarity, and a polished result."
           align="center"
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          {testimonials.map((item) => (
+          {experiencePillars.map((item) => (
             <Card key={item.name}>
               <CardContent className="space-y-4 p-6">
-                <Quote className="h-8 w-8 text-surface-500" />
-                <p className="text-lg leading-8 text-ink-800">{item.quote}</p>
+                <Star className="h-8 w-8 text-surface-500" />
+                <p className="text-lg leading-8 text-ink-800">{item.description}</p>
                 <p className="text-sm font-semibold uppercase tracking-[0.26em] text-ink-700/55">
                   {item.name}
                 </p>

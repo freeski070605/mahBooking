@@ -32,8 +32,8 @@ export function GalleryPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <PageIntro
           eyebrow="Gallery"
-          title="Visual storytelling that feels like brand work, not a cheap grid."
-          description="Featured work is presented with large imagery, soft framing, and category filters so the portfolio feels premium on every screen."
+          title="Recent finishes, soft detail, and studio texture."
+          description="Browse the portfolio for the kind of shape, shine, and polish the chair is known for."
         />
         <div className="w-full max-w-xs">
           <Select value={category} onValueChange={setCategory}>
@@ -94,8 +94,8 @@ export function GalleryPage() {
         </div>
       ) : (
         <EmptyState
-          title="Nothing has been added to this gallery filter yet."
-          description="Check another category to explore the full beauty portfolio."
+          title="Nothing is showing in this category yet."
+          description="Try another filter to see more recent work."
         />
       )}
 
@@ -116,7 +116,7 @@ export function GalleryPage() {
                   {activeItem.title || activeItem.category}
                 </DialogTitle>
                 <DialogDescription className="text-base leading-7 text-ink-700/80">
-                  {activeItem.caption || "Beautiful work presented in a soft luxury frame."}
+                  {activeItem.caption || "A polished finish, captured in soft light."}
                 </DialogDescription>
                 <Button onClick={() => setActiveItem(null)}>Close image</Button>
               </div>
