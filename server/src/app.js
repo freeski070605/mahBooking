@@ -13,7 +13,14 @@ const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-const allowedOrigins = env.frontendUrl.split(",").map((item) => item.trim());
+function normalizeOrigin(value) {
+  return value.trim().replace(/\/+$/, "");
+}
+
+const allowedOrigins = env.frontendUrl
+  .split(",")
+  .map((item) => normalizeOrigin(item))
+  .filter(Boolean);
 
 if (env.nodeEnv === "production") {
   app.set("trust proxy", 1);
@@ -27,11 +34,19 @@ app.use(
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
         callback(null, true);
         return;
       }
 
+      const requestOrigin = normalizeOrigin(origin);
+
+      if (allowedOrigins.includes(requestOrigin)) {
+        callback(null, true);
+        return;
+      }
+
+      console.warn(`Blocked by CORS: ${requestOrigin}`);
       callback(new Error("Origin not allowed by CORS"));
     },
     credentials: true,
