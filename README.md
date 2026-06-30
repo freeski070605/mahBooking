@@ -128,6 +128,7 @@ Use the admin email and password configured in `server/.env` via:
 - Build command: `npm run build`
 - Output directory: `dist`
 - Set `VITE_API_BASE_URL` to your Render API URL plus `/api`
+- Keep `client/vercel.json` deployed so direct links like `/account` and `/booking` fall back to the React app instead of returning a host-level 404.
 
 ### Render
 
