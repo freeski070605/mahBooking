@@ -26,6 +26,14 @@ const env = {
   cloudinaryBrandingFolder:
     process.env.CLOUDINARY_BRANDING_FOLDER || `${cloudinaryRootFolder}/branding`,
   uploadMaxFileSizeMb: Number(process.env.UPLOAD_MAX_FILE_SIZE_MB) || 5,
+  smtpHost: process.env.SMTP_HOST || "",
+  smtpPort: Number(process.env.SMTP_PORT) || 587,
+  smtpSecure: process.env.SMTP_SECURE === "true",
+  smtpUser: process.env.SMTP_USER || "",
+  smtpPass: process.env.SMTP_PASS || "",
+  mailFrom: process.env.MAIL_FROM || "",
+  bookingNotificationEmails:
+    process.env.BOOKING_NOTIFICATION_EMAILS || "shanteharvey17@gmail.com",
   seedAdminEmail:
     process.env.SEED_ADMIN_EMAIL || "owner@example.com",
   seedAdminPassword:

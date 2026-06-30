@@ -28,6 +28,38 @@ export function formatServicePrice(service) {
   return price;
 }
 
+export function getInstagramUrl(value = "") {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  const handle = trimmed
+    .replace(/^@/, "")
+    .replace(/^www\.instagram\.com\//i, "")
+    .replace(/^instagram\.com\//i, "")
+    .replace(/^\/+|\/+$/g, "");
+
+  return handle ? `https://www.instagram.com/${handle}` : "";
+}
+
+export function getInstagramLabel(value = "") {
+  const trimmed = value.trim();
+  const handle = trimmed
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/^www\.instagram\.com\//i, "")
+    .replace(/^instagram\.com\//i, "")
+    .replace(/^@/, "")
+    .replace(/^\/+|\/+$/g, "");
+
+  return handle ? `@${handle}` : trimmed;
+}
+
 export function formatDuration(minutes) {
   const hrs = Math.floor(minutes / 60);
   const mins = minutes % 60;

@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AtSign, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { inquiriesApi, settingsApi } from "@/lib/api";
+import { InstagramIcon } from "@/components/shared/InstagramIcon";
 import { PageIntro } from "@/components/shared/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { getInstagramLabel, getInstagramUrl } from "@/lib/utils";
 import { toast } from "sonner";
 
 export function ContactPage() {
@@ -24,6 +26,8 @@ export function ContactPage() {
   });
 
   const settings = settingsQuery.data?.settings;
+  const instagramValue = settings?.socialLinks?.instagram || "@mahesti";
+  const instagramUrl = getInstagramUrl(instagramValue);
 
   const inquiryMutation = useMutation({
     mutationFn: (payload) => inquiriesApi.create(payload),
@@ -56,9 +60,10 @@ export function ContactPage() {
       value: settings?.city || settings?.address || "Atlanta, Georgia",
     },
     {
-      icon: AtSign,
+      icon: InstagramIcon,
       label: "Instagram",
-      value: settings?.socialLinks?.instagram || "@mahesti",
+      value: getInstagramLabel(instagramValue),
+      href: instagramUrl,
     },
   ];
 
@@ -83,7 +88,20 @@ export function ContactPage() {
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
                       {item.label}
                     </p>
-                    <p className="mt-1 text-base font-medium text-ink-900">{item.value}</p>
+                    {item.href ? (
+                      <a
+                        className="mt-2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-ink-900 text-white transition hover:bg-surface-600"
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${item.value} on Instagram`}
+                        title={item.value}
+                      >
+                        <InstagramIcon className="h-5 w-5" />
+                      </a>
+                    ) : (
+                      <p className="mt-1 text-base font-medium text-ink-900">{item.value}</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>

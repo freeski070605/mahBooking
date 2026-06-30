@@ -2,6 +2,10 @@ const dayjs = require("dayjs");
 const Appointment = require("../models/Appointment");
 const Client = require("../models/Client");
 const Service = require("../models/Service");
+const {
+  sendBookingConfirmedNotifications,
+  sendBookingCreatedNotifications,
+} = require("../lib/bookingNotifications");
 const { ensureAvailability, ensureBusinessSettings } = require("../lib/singletons");
 const { ApiError } = require("../utils/apiError");
 const { findSlotMatch, generateAvailableSlots } = require("../utils/booking");
@@ -13,6 +17,12 @@ function getAppointmentOwnerFilter(user) {
   return {
     $or: [{ userId: user._id }, { clientEmail: user.email }],
   };
+}
+
+function queueBookingNotification(notificationPromise) {
+  notificationPromise.catch((error) => {
+    console.error("Booking notification failed:", error.message || error);
+  });
 }
 
 async function syncClientProfile({
@@ -314,6 +324,8 @@ async function createAppointment(req, res) {
     source: isAdminRequest ? "admin" : "client",
   });
 
+  queueBookingNotification(sendBookingCreatedNotifications(appointment));
+
   res.status(201).json({ appointment });
 }
 
@@ -468,6 +480,7 @@ async function updateAppointmentStatus(req, res) {
     throw new ApiError(404, "That appointment could not be found.");
   }
 
+  const previousStatus = appointment.status;
   appointment.status = req.body.status;
   await appointment.save();
 
@@ -482,6 +495,10 @@ async function updateAppointmentStatus(req, res) {
     status: appointment.status,
     startAt: appointment.startAt,
   });
+
+  if (previousStatus !== "confirmed" && appointment.status === "confirmed") {
+    queueBookingNotification(sendBookingConfirmedNotifications(appointment));
+  }
 
   res.json({ appointment });
 }

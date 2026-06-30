@@ -73,9 +73,7 @@ export function AdminDashboardPage() {
                 {[
                   "Add your first service",
                   "Set your availability",
-                  "Add contact info",
                   "Add policies",
-                  "Publish your booking page",
                   "Add gallery images",
                 ].map((item) => (
                   <div key={item} className="rounded-[1.25rem] bg-surface-50 p-4 text-sm font-semibold text-ink-800">

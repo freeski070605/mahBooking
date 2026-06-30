@@ -4,6 +4,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { publicNavigation } from "@/data/navigation";
 import { settingsApi } from "@/lib/api";
+import { InstagramIcon } from "@/components/shared/InstagramIcon";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn, getInstagramLabel, getInstagramUrl } from "@/lib/utils";
 
 export function PublicLayout() {
   const { isAuthenticated, user, isAdmin } = useAuth();
@@ -22,6 +23,8 @@ export function PublicLayout() {
   const settings = settingsQuery.data?.settings;
   const businessName = settings?.businessName || "MAH Esti";
   const location = settings?.city || settings?.address || "Atlanta, GA";
+  const instagramValue = settings?.socialLinks?.instagram || "";
+  const instagramUrl = getInstagramUrl(instagramValue);
 
   return (
     <div className="min-h-screen bg-hero-glow text-ink-900">
@@ -150,8 +153,17 @@ export function PublicLayout() {
               {settings?.contactPhone || "(555) 274-5612"}
             </p>
             <p className="text-sm text-ink-700/75">{location}</p>
-            {settings?.socialLinks?.instagram ? (
-              <p className="text-sm text-ink-700/75">{settings.socialLinks.instagram}</p>
+            {instagramUrl ? (
+              <a
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-surface-200 bg-white text-ink-900 transition hover:border-surface-500 hover:text-surface-700"
+                href={instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open ${getInstagramLabel(instagramValue)} on Instagram`}
+                title={getInstagramLabel(instagramValue)}
+              >
+                <InstagramIcon className="h-5 w-5" />
+              </a>
             ) : null}
           </div>
         </div>
