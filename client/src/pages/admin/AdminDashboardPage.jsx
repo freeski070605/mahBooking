@@ -59,6 +59,33 @@ export function AdminDashboardPage() {
         </div>
       ) : (
         <>
+          <Card>
+            <CardContent className="space-y-4 p-6">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
+                  Setup checklist
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold text-ink-900">
+                  Launch basics
+                </h2>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {[
+                  "Add your first service",
+                  "Set your availability",
+                  "Add contact info",
+                  "Add policies",
+                  "Publish your booking page",
+                  "Add gallery images",
+                ].map((item) => (
+                  <div key={item} className="rounded-[1.25rem] bg-surface-50 p-4 text-sm font-semibold text-ink-800">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid gap-5 lg:grid-cols-5">
             <MetricCard
               label="Pending booking requests"
@@ -120,33 +147,6 @@ export function AdminDashboardPage() {
               );
             })}
           </div>
-
-          <Card>
-            <CardContent className="space-y-4 p-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
-                  Setup checklist
-                </p>
-                <h2 className="mt-2 text-2xl font-semibold text-ink-900">
-                  Launch basics
-                </h2>
-              </div>
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {[
-                  "Add your first service",
-                  "Set your availability",
-                  "Add contact info",
-                  "Add policies",
-                  "Publish your booking page",
-                  "Add gallery images",
-                ].map((item) => (
-                  <div key={item} className="rounded-[1.25rem] bg-surface-50 p-4 text-sm font-semibold text-ink-800">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
 
           <div className="grid gap-5 xl:grid-cols-2">
             <Card>
