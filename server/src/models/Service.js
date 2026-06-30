@@ -107,7 +107,7 @@ const serviceSchema = new mongoose.Schema(
 
 serviceSchema.index({ category: 1, isActive: 1, displayOrder: 1 });
 
-serviceSchema.pre("validate", function fillServiceDescriptions(next) {
+serviceSchema.pre("validate", function fillServiceDescriptions() {
   if (!this.shortDescription && this.description) {
     this.shortDescription = this.description;
   }
@@ -128,7 +128,6 @@ serviceSchema.pre("validate", function fillServiceDescriptions(next) {
     this.price = 0;
   }
 
-  next();
 });
 
 module.exports = mongoose.model("Service", serviceSchema);

@@ -1,9 +1,33 @@
 const Service = require("../models/Service");
 const Appointment = require("../models/Appointment");
+const { ensureBusinessSettings } = require("../lib/singletons");
+const { buildStarterServices } = require("../lib/starterServices");
 const { deleteImage } = require("../lib/cloudinaryService");
 const { ApiError } = require("../utils/apiError");
 
+async function ensureStarterServices() {
+  const settings = await ensureBusinessSettings();
+
+  if (settings.starterServicesSeeded) {
+    return;
+  }
+
+  const serviceCount = await Service.countDocuments();
+
+  if (serviceCount > 0) {
+    settings.starterServicesSeeded = true;
+    await settings.save();
+    return;
+  }
+
+  await Service.insertMany(buildStarterServices());
+  settings.starterServicesSeeded = true;
+  await settings.save();
+}
+
 async function getServices(req, res) {
+  await ensureStarterServices();
+
   const query = {};
   const isAdminScope = req.user?.role === "admin" && req.query.scope === "all";
 

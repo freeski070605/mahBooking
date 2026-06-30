@@ -135,7 +135,7 @@ Use the admin email and password configured in `server/.env` via:
 - Build command: `npm install`
 - Start command: `npm run start`
 - Add all values from `server/.env.example`
-- Set `FRONTEND_URL` to your deployed Vercel origin, for example `https://mahbooking.vercel.app`
+- Set `FRONTEND_URL` to your deployed Vercel origin, for example `https://mahesti.vercel.app`
 - Do not include a trailing slash in `FRONTEND_URL`
 - If you need to allow more than one frontend origin, separate them with commas
 - After changing `FRONTEND_URL`, redeploy the Render service

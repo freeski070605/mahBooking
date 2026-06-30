@@ -181,9 +181,14 @@ export function AdminServicesPage() {
                         {service.name}
                       </h2>
                     </div>
-                    <Badge variant={service.isActive ? "success" : "muted"}>
-                      {service.isActive ? "Active" : "Inactive"}
-                    </Badge>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant={service.isActive ? "success" : "muted"}>
+                        {service.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                      <Badge variant={service.isPublished ? "success" : "muted"}>
+                        {service.isPublished ? "Published" : "Draft"}
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-sm leading-7 text-ink-700/75">
                     {service.shortDescription || service.description}

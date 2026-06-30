@@ -77,6 +77,10 @@ const businessSettingsSchema = new mongoose.Schema(
       ctaPrimary: { type: String, default: "Request appointment" },
       ctaSecondary: { type: String, default: "Explore services" },
     },
+    starterServicesSeeded: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

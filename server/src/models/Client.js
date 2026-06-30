@@ -100,7 +100,7 @@ const clientSchema = new mongoose.Schema(
 
 clientSchema.index({ email: 1 }, { unique: true, sparse: true });
 
-clientSchema.pre("validate", function fillClientName(next) {
+clientSchema.pre("validate", function fillClientName() {
   if (!this.name) {
     this.name = [this.firstName, this.lastName].filter(Boolean).join(" ").trim();
   }
@@ -111,7 +111,6 @@ clientSchema.pre("validate", function fillClientName(next) {
     this.lastName = this.lastName || rest.join(" ");
   }
 
-  next();
 });
 
 module.exports = mongoose.model("Client", clientSchema);
