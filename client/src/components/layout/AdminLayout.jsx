@@ -49,7 +49,7 @@ export function AdminLayout() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <div className="font-display text-2xl text-ink-900">MAH Booking</div>
+                <div className="font-display text-2xl text-ink-900">MAH Esti</div>
                 <div className="text-xs uppercase tracking-[0.24em] text-ink-700/55">
                   Calm control center
                 </div>
@@ -79,8 +79,8 @@ export function AdminLayout() {
           <div className="space-y-6">
             <div className="flex items-center justify-between rounded-[2rem] border border-white/80 bg-white/80 px-5 py-4 shadow-soft backdrop-blur lg:hidden">
               <div>
-                <p className="font-display text-2xl text-ink-900">MAH Booking</p>
-                <p className="text-sm text-ink-700/65">Beauty business dashboard</p>
+                <p className="font-display text-2xl text-ink-900">MAH Esti</p>
+                <p className="text-sm text-ink-700/65">Esthetician dashboard</p>
               </div>
               <Dialog>
                 <DialogTrigger asChild>

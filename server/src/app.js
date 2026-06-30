@@ -59,7 +59,7 @@ app.use(cookieParser());
 app.use(hydrateUser);
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, app: "MAH Booking API" });
+  res.json({ ok: true, app: "MAH Esti API" });
 });
 
 app.use("/api", apiRoutes);

@@ -70,7 +70,7 @@ function App() {
       fallback={
         <div className="page-shell">
           <div className="glass-panel p-10 text-center text-sm text-ink-700/70">
-            Loading MAH Booking...
+            Loading MAH Esti...
           </div>
         </div>
       }

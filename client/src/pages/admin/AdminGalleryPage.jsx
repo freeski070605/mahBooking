@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 const emptyGalleryItem = {
   title: "",
   caption: "",
-  category: "Signature Styling",
+  category: "Facials",
   imageUrl: "",
   imagePublicId: "",
   isFeatured: false,

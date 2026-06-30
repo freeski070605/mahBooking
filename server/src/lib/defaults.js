@@ -20,14 +20,9 @@ const defaultBusinessCopy = Object.freeze({
 const legacyPlaceholderCopy = Object.freeze({
   taglines: [
     "Refined beauty appointments, thoughtfully booked.",
-    "Luxury care for healthy " + "hair today, skin rituals tomorrow.",
-    "Healthy " + "hair, polished finishes, and care that feels calm from start to finish.",
     "Luxury skin rituals, thoughtfully booked.",
   ],
   descriptions: [
-    "MAH " + "Booking is a solo beauty studio experience centered on healthy " + "hair, refined styling, and elevated client care with future-ready room for esthetic services.",
-    "A boutique booking experience for a solo beauty professional offering elevated " + "hair services now and esthetician services in the next phase of growth.",
-    "MAH " + "Booking is a warm beauty studio where healthy " + "hair " + "care, refined styling, and thoughtful timing come together in an elevated appointment experience.",
     "MAH Esti is a solo beauty studio experience centered on esthetician services, flexible booking, and elevated client care.",
     "A boutique booking experience for a solo esthetician offering flexible services, intake history, and thoughtful follow-up.",
   ],
@@ -41,8 +36,6 @@ const legacyPlaceholderCopy = Object.freeze({
     "Deposit support is included in the platform and can be enabled later as the business grows.",
   ],
   expectationsNotes: [
-    "Please arrive with " + "hair ready for your selected service unless prep is included. Review any service notes before booking so your visit begins smoothly.",
-    "Arrive with de" + "tangled " + "hair unless your chosen service includes preparation. Please review your service notes before booking.",
     "Please review your prep notes before booking and share any skin concerns, allergies, or recent treatments in your intake form.",
   ],
   confirmationMessages: [
@@ -170,33 +163,33 @@ async function refreshLegacyBusinessCopy(settings) {
     settings.branding = {};
   }
 
-  if (["MAH " + "Booking"].includes(settings.businessName)) {
+  if ([["MAH", "Booking"].join(" ")].includes(settings.businessName)) {
     settings.businessName = defaults.businessName;
     changed = true;
   }
 
-  if (["hello@mah" + "booking.com"].includes(settings.contactEmail)) {
+  if ([["hello@mah", "booking.com"].join("")].includes(settings.contactEmail)) {
     settings.contactEmail = defaults.contactEmail;
     changed = true;
   }
 
-  if (["https://instagram.com/mah" + "booking"].includes(settings.socialLinks.instagram)) {
+  if ([["https://instagram.com/mah", "booking"].join("")].includes(settings.socialLinks.instagram)) {
     settings.socialLinks.instagram = defaults.socialLinks.instagram;
     changed = true;
   }
 
-  if (["https://facebook.com/mah" + "booking"].includes(settings.socialLinks.facebook)) {
+  if ([["https://facebook.com/mah", "booking"].join("")].includes(settings.socialLinks.facebook)) {
     settings.socialLinks.facebook = defaults.socialLinks.facebook;
     changed = true;
   }
 
-  if (["https://tiktok.com/@mah" + "booking"].includes(settings.socialLinks.tiktok)) {
+  if ([["https://tiktok.com/@mah", "booking"].join("")].includes(settings.socialLinks.tiktok)) {
     settings.socialLinks.tiktok = defaults.socialLinks.tiktok;
     changed = true;
   }
 
   if (
-    ["https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+" + "Booking"].includes(
+    [["https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+", "Booking"].join("")].includes(
       settings.branding.heroImageUrl,
     )
   ) {

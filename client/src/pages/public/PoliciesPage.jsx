@@ -63,7 +63,7 @@ export function PoliciesPage() {
           <h2 className="font-display text-5xl text-ink-900">A little prep goes a long way.</h2>
           <p className="max-w-3xl text-base leading-8 text-ink-700/80">
             {settings?.policies?.expectations ||
-              "Please arrive with hair ready for your selected service unless prep is included. Review any service notes before booking so your visit begins smoothly."}
+              "Please review your prep notes before booking and share any skin concerns, allergies, medications, or recent treatments in your intake form."}
           </p>
         </CardContent>
       </Card>

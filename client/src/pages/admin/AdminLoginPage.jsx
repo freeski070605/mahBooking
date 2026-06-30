@@ -60,10 +60,10 @@ export function AdminLoginPage() {
               </div>
               <div className="space-y-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/60">
-                  MAH Booking admin
+                  MAH Esti admin
                 </p>
                 <h1 className="font-display text-6xl leading-none">
-                  A calm beauty-business control center.
+                  A calm esthetician control center.
                 </h1>
                 <p className="text-base leading-8 text-white/75">
                   The dashboard is designed to feel clear, gentle, and obvious so
@@ -86,7 +86,7 @@ export function AdminLoginPage() {
                 </div>
                 <h2 className="font-display text-5xl text-ink-900">Owner login</h2>
                 <p className="text-sm leading-7 text-ink-700/70">
-                  Sign in to manage appointments, services, images, and availability.
+                  Sign in to manage appointments, services, customers, images, and availability.
                 </p>
               </div>
 

@@ -32,8 +32,8 @@ export function GalleryPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <PageIntro
           eyebrow="Gallery"
-          title="Recent finishes, soft detail, and studio texture."
-          description="Browse the portfolio for the kind of shape, shine, and polish the chair is known for."
+          title="Recent treatments, soft detail, and studio texture."
+          description="Browse the portfolio for skin-care results, brow and lash details, and the warm feel of the studio."
         />
         <div className="w-full max-w-xs">
           <Select value={category} onValueChange={setCategory}>

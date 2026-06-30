@@ -23,9 +23,9 @@ export function PublicLayout() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-display text-2xl leading-none">MAH Booking</div>
+              <div className="font-display text-2xl leading-none">MAH Esti</div>
               <div className="text-xs uppercase tracking-[0.3em] text-ink-700/55">
-                Healthy hair studio
+                Esthetician studio
               </div>
             </div>
           </NavLink>
@@ -110,10 +110,10 @@ export function PublicLayout() {
       <footer className="border-t border-surface-200/70 bg-[#fff8f2]">
         <div className="container grid gap-10 py-14 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div className="space-y-4">
-            <p className="font-display text-3xl text-ink-900">MAH Booking</p>
+            <p className="font-display text-3xl text-ink-900">MAH Esti</p>
             <p className="max-w-md text-sm leading-7 text-ink-700/75">
-              Healthy hair care, polished styling, and a booking experience that
-              feels warm from the first click.
+              Personalized skin care, thoughtful intake, and a booking
+              experience that feels warm from the first click.
             </p>
           </div>
           <div className="space-y-3">
@@ -134,7 +134,7 @@ export function PublicLayout() {
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-surface-600">
               Contact
             </p>
-            <p className="text-sm text-ink-700/75">hello@mahbooking.com</p>
+            <p className="text-sm text-ink-700/75">hello@mahesti.com</p>
             <p className="text-sm text-ink-700/75">(555) 274-5612</p>
             <p className="text-sm text-ink-700/75">Atlanta, GA</p>
           </div>
