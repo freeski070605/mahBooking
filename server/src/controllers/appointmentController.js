@@ -72,6 +72,9 @@ async function syncClientProfile({
         ...update,
         userId: userId || null,
       },
+      $setOnInsert: {
+        firstVisitAt: startAt,
+      },
       ...(increment ? { $inc: increment } : {}),
     },
     {
@@ -101,6 +104,7 @@ async function resolveServiceSnapshot(serviceId, options = {}) {
       name: service.name,
       category: service.category,
       price: service.price,
+      priceType: service.priceType,
       durationMinutes: service.durationMinutes,
       bufferMinutes: service.bufferMinutes,
       imageUrl: service.imageUrl,

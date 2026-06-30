@@ -41,6 +41,7 @@ const emptyClient = {
   skinConcerns: "",
   allergies: "",
   currentSkincareRoutine: "",
+  recommendedFollowUp: "",
   notes: "",
   internalNotes: "",
   isFlagged: false,
@@ -123,6 +124,15 @@ export function AdminClientsPage() {
   );
   const intakeHistory = useMemo(
     () => selectedAppointments.filter((appointment) => appointment.intakeAnswers),
+    [selectedAppointments],
+  );
+  const nextBooking = useMemo(
+    () =>
+      selectedAppointments.find(
+        (appointment) =>
+          new Date(appointment.startAt) >= new Date() &&
+          !["canceled", "no-show"].includes(appointment.status),
+      ),
     [selectedAppointments],
   );
 
@@ -273,8 +283,10 @@ export function AdminClientsPage() {
 
               <div className="grid gap-4 md:grid-cols-3">
                 <ProfileTile label="Skin type" value={selectedClient.skinType || "Not added"} />
+                <ProfileTile label="Client type" value={(selectedAppointments.length || 0) <= 1 ? "First-time" : "Returning"} />
                 <ProfileTile label="Birthday" value={toDateInput(selectedClient.birthday) || "Not added"} />
                 <ProfileTile label="Last appointment" value={selectedClient.lastAppointmentAt ? formatAppointmentLabel(selectedClient.lastAppointmentAt) : "No visits yet"} />
+                <ProfileTile label="Next booking" value={nextBooking ? formatAppointmentLabel(nextBooking.startAt) : "None scheduled"} />
               </div>
 
               <div className="grid gap-5 lg:grid-cols-2">
@@ -282,6 +294,7 @@ export function AdminClientsPage() {
                 <ProfilePanel title="Allergies" value={selectedClient.allergies || "No allergies recorded yet."} />
                 <ProfilePanel title="Current routine" value={selectedClient.currentSkincareRoutine || "No routine recorded yet."} />
                 <ProfilePanel title="Private notes" value={selectedClient.internalNotes || selectedClient.notes || "No private notes yet."} />
+                <ProfilePanel title="Recommended follow-up" value={selectedClient.recommendedFollowUp || "No recommended follow-up yet."} />
               </div>
 
               <HistorySection appointments={selectedAppointments} />
@@ -323,6 +336,7 @@ export function AdminClientsPage() {
             </div>
             <TextAreaField id="client-notes" label="Customer notes" value={draft.notes} onChange={(value) => setDraft((current) => ({ ...current, notes: value }))} />
             <TextAreaField id="client-private-notes" label="Private notes" value={draft.internalNotes} onChange={(value) => setDraft((current) => ({ ...current, internalNotes: value }))} />
+            <TextAreaField id="client-follow-up" label="Recommended follow-up" value={draft.recommendedFollowUp} onChange={(value) => setDraft((current) => ({ ...current, recommendedFollowUp: value }))} />
             <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
               <div>
                 <p className="font-semibold text-ink-900">Flag customer</p>
@@ -440,6 +454,10 @@ function IntakeSection({ appointments }) {
                   <p>Allergies: {answers.allergies || "Not answered"}</p>
                   <p>Retinol: {answers.retinolUse || "Not answered"}</p>
                   <p>Accutane: {answers.accutaneUse || "Not answered"}</p>
+                  <p>Recent waxing: {answers.recentWaxing || "Not answered"}</p>
+                  <p>Recent peel: {answers.recentChemicalPeels || "Not answered"}</p>
+                  <p>Medications/conditions: {answers.medicationsOrConditions || "Not answered"}</p>
+                  <p>Consent to contact: {answers.consentToContact ? "Yes" : "No"}</p>
                   <p>Goals: {answers.appointmentGoals || "Not answered"}</p>
                 </div>
               </div>

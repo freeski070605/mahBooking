@@ -12,8 +12,8 @@ import { toast } from "sonner";
 import { appointmentsApi, servicesApi } from "@/lib/api";
 import {
   formatAppointmentLabel,
-  formatCurrency,
   formatDuration,
+  formatServicePrice,
   formatLongDate,
   formatTimeLabel,
   getErrorMessage,
@@ -331,7 +331,7 @@ export function AdminAppointmentsPage() {
                             {appointment.serviceSnapshot.name}
                           </p>
                           <p className="text-sm text-ink-700/70">
-                            {formatCurrency(appointment.serviceSnapshot.price || 0)} -{" "}
+                            {formatServicePrice(appointment.serviceSnapshot)} -{" "}
                             {formatDuration(appointment.serviceSnapshot.durationMinutes || 0)}
                           </p>
                         </div>
@@ -356,6 +356,8 @@ export function AdminAppointmentsPage() {
                               <p>Recent waxing: {appointment.intakeAnswers.recentWaxing || "Not answered"}</p>
                               <p>Recent peels: {appointment.intakeAnswers.recentChemicalPeels || "Not answered"}</p>
                               <p>Pregnancy status: {appointment.intakeAnswers.pregnancyStatus || "Not answered"}</p>
+                              <p>Medications/conditions: {appointment.intakeAnswers.medicationsOrConditions || "Not answered"}</p>
+                              <p>Consent to contact: {appointment.intakeAnswers.consentToContact ? "Yes" : "No"}</p>
                               <p>Goals: {appointment.intakeAnswers.appointmentGoals || "Not answered"}</p>
                             </div>
                           </div>

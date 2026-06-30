@@ -57,6 +57,15 @@ const clientSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    recommendedFollowUp: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    firstVisitAt: {
+      type: Date,
+      default: null,
+    },
     notes: {
       type: String,
       trim: true,

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { servicesApi } from "@/lib/api";
-import { formatCurrency, formatDuration, getErrorMessage } from "@/lib/utils";
+import { formatCurrency, formatDuration, formatServicePrice, getErrorMessage } from "@/lib/utils";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ImageUploader } from "@/components/shared/ImageUploader";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -23,6 +24,7 @@ const emptyService = {
   fullDescription: "",
   description: "",
   price: 85,
+  priceType: "fixed",
   durationMinutes: 60,
   bufferMinutes: 15,
   imageUrl: "",
@@ -34,6 +36,7 @@ const emptyService = {
   contraindications: "",
   consultationRequired: false,
   isActive: true,
+  isPublished: true,
   displayOrder: 0,
   featured: false,
 };
@@ -187,7 +190,7 @@ export function AdminServicesPage() {
                   </p>
                   <div className="grid gap-3 text-sm text-ink-700/70 sm:grid-cols-3">
                     <div>
-                      <p className="font-semibold text-ink-900">{formatCurrency(service.price)}</p>
+                      <p className="font-semibold text-ink-900">{formatServicePrice(service)}</p>
                       <p>Price</p>
                     </div>
                     <div>
@@ -290,10 +293,30 @@ export function AdminServicesPage() {
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label>Price display</Label>
+                    <Select
+                      value={draft.priceType}
+                      onValueChange={(value) =>
+                        setDraft((current) => ({ ...current, priceType: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="fixed">Fixed price</SelectItem>
+                        <SelectItem value="starting_at">Starting at</SelectItem>
+                        <SelectItem value="tbd">TBD</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="service-price">Price</Label>
                     <Input
                       id="service-price"
                       type="number"
+                      disabled={draft.priceType === "tbd"}
+                      placeholder="Example: 75"
                       value={draft.price}
                       onChange={(event) =>
                         setDraft((current) => ({ ...current, price: Number(event.target.value) }))
@@ -349,6 +372,7 @@ export function AdminServicesPage() {
                   <Label htmlFor="service-short-description">Short description</Label>
                   <Textarea
                     id="service-short-description"
+                    placeholder="Example: Great for dry or dull skin"
                     value={draft.shortDescription}
                     onChange={(event) =>
                       setDraft((current) => ({ ...current, shortDescription: event.target.value }))
@@ -359,6 +383,7 @@ export function AdminServicesPage() {
                   <Label htmlFor="service-full-description">Full description</Label>
                   <Textarea
                     id="service-full-description"
+                    placeholder="Describe what this service includes and who it is best for."
                     value={draft.fullDescription}
                     onChange={(event) =>
                       setDraft((current) => ({ ...current, fullDescription: event.target.value }))
@@ -399,6 +424,7 @@ export function AdminServicesPage() {
                     <Label htmlFor="service-prep">Prep instructions</Label>
                     <Textarea
                       id="service-prep"
+                      placeholder="Example: Avoid retinol 3-5 days before appointment"
                       value={draft.prepInstructions}
                       onChange={(event) =>
                         setDraft((current) => ({ ...current, prepInstructions: event.target.value }))
@@ -409,6 +435,7 @@ export function AdminServicesPage() {
                     <Label htmlFor="service-aftercare">Aftercare instructions</Label>
                     <Textarea
                       id="service-aftercare"
+                      placeholder="Example: Drink water and avoid heavy makeup after your service"
                       value={draft.aftercareInstructions}
                       onChange={(event) =>
                         setDraft((current) => ({ ...current, aftercareInstructions: event.target.value }))
@@ -420,6 +447,7 @@ export function AdminServicesPage() {
                   <Label htmlFor="service-contraindications">Contraindications or important warnings</Label>
                   <Textarea
                     id="service-contraindications"
+                    placeholder="Example: Recent peel, Accutane use, product allergies, or sensitive skin concerns"
                     value={draft.contraindications}
                     onChange={(event) =>
                       setDraft((current) => ({ ...current, contraindications: event.target.value }))
@@ -436,6 +464,18 @@ export function AdminServicesPage() {
                       checked={draft.consultationRequired}
                       onCheckedChange={(value) =>
                         setDraft((current) => ({ ...current, consultationRequired: value }))
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
+                    <div>
+                      <p className="font-semibold text-ink-900">Published</p>
+                      <p className="text-sm text-ink-700/65">Show this service publicly.</p>
+                    </div>
+                    <Switch
+                      checked={draft.isPublished}
+                      onCheckedChange={(value) =>
+                        setDraft((current) => ({ ...current, isPublished: value }))
                       }
                     />
                   </div>

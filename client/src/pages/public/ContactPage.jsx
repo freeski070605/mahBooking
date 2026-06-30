@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AtSign, Mail, MapPin, Phone } from "lucide-react";
-import { settingsApi } from "@/lib/api";
+import { inquiriesApi, settingsApi } from "@/lib/api";
 import { PageIntro } from "@/components/shared/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +14,7 @@ export function ContactPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
 
@@ -24,12 +25,18 @@ export function ContactPage() {
 
   const settings = settingsQuery.data?.settings;
 
+  const inquiryMutation = useMutation({
+    mutationFn: (payload) => inquiriesApi.create(payload),
+    onSuccess: () => {
+      toast.success("Inquiry sent. MAH Esti will follow up soon.");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    },
+    onError: () => toast.error("We couldn't send your inquiry. Please try again."),
+  });
+
   function handleSubmit(event) {
     event.preventDefault();
-    toast.success(
-      "Your note was saved locally. For a reply, please use the phone, email, or Instagram details on this page for now.",
-    );
-    setForm({ name: "", email: "", message: "" });
+    inquiryMutation.mutate(form);
   }
 
   const contactCards = [
@@ -41,17 +48,17 @@ export function ContactPage() {
     {
       icon: Mail,
       label: "Email",
-      value: settings?.contactEmail || "hello@mahbooking.com",
+      value: settings?.contactEmail || "hello@mahesti.com",
     },
     {
       icon: MapPin,
       label: "Location",
-      value: settings?.address || "Atlanta, Georgia",
+      value: settings?.city || settings?.address || "Atlanta, Georgia",
     },
     {
       icon: AtSign,
       label: "Instagram",
-      value: settings?.socialLinks?.instagram || "@mahbooking",
+      value: settings?.socialLinks?.instagram || "@mahesti",
     },
   ];
 
@@ -90,8 +97,8 @@ export function ContactPage() {
           <div className="space-y-2">
             <h2 className="font-display text-4xl text-ink-900">Send a note</h2>
             <p className="text-sm leading-6 text-ink-700/70">
-              The direct contact details on the left are the best way to get a
-              response while this inquiry form is still being connected.
+              Ask about services, prep, product allergies, or availability. The
+              message will save as a new inquiry in the admin dashboard.
             </p>
           </div>
           <form className="space-y-5" onSubmit={handleSubmit}>
@@ -113,6 +120,14 @@ export function ContactPage() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="contact-phone">Phone</Label>
+              <Input
+                id="contact-phone"
+                value={form.phone}
+                onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="contact-message">Message</Label>
               <Textarea
                 id="contact-message"
@@ -122,7 +137,9 @@ export function ContactPage() {
                 }
               />
             </div>
-            <Button type="submit">Send inquiry</Button>
+            <Button type="submit" disabled={inquiryMutation.isPending}>
+              {inquiryMutation.isPending ? "Sending..." : "Send inquiry"}
+            </Button>
           </form>
         </CardContent>
       </Card>

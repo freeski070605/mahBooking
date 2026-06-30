@@ -48,6 +48,11 @@ const AdminGalleryPage = lazy(() =>
     default: module.AdminGalleryPage,
   })),
 );
+const AdminInquiriesPage = lazy(() =>
+  import("@/pages/admin/AdminInquiriesPage").then((module) => ({
+    default: module.AdminInquiriesPage,
+  })),
+);
 const AdminAvailabilityPage = lazy(() =>
   import("@/pages/admin/AdminAvailabilityPage").then((module) => ({
     default: module.AdminAvailabilityPage,
@@ -98,6 +103,7 @@ function App() {
           <Route index element={<AdminDashboardPage />} />
           <Route path="appointments" element={<AdminAppointmentsPage />} />
           <Route path="services" element={<AdminServicesPage />} />
+          <Route path="inquiries" element={<AdminInquiriesPage />} />
           <Route path="gallery" element={<AdminGalleryPage />} />
           <Route path="availability" element={<AdminAvailabilityPage />} />
           <Route path="clients" element={<AdminClientsPage />} />

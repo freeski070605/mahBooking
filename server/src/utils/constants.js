@@ -23,9 +23,19 @@ const SERVICE_CATEGORIES = [
   "Add-Ons",
 ];
 
+const GALLERY_CATEGORIES = [
+  "Facials",
+  "Brows",
+  "Lashes",
+  "Waxing",
+  "Studio",
+  "Results",
+];
+
 module.exports = {
   APPOINTMENT_STATUSES,
   BLOCKING_APPOINTMENT_STATUSES,
+  GALLERY_CATEGORIES,
   USER_ROLES,
   SERVICE_CATEGORIES,
 };

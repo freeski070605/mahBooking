@@ -23,6 +23,7 @@ const emptyGalleryItem = {
   imageUrl: "",
   imagePublicId: "",
   isFeatured: false,
+  isPublished: true,
   displayOrder: 0,
 };
 
@@ -34,7 +35,7 @@ export function AdminGalleryPage() {
 
   const galleryQuery = useQuery({
     queryKey: ["admin-gallery"],
-    queryFn: () => galleryApi.list(),
+    queryFn: () => galleryApi.list({ scope: "all" }),
     select: (data) => data.gallery,
   });
 
@@ -139,7 +140,12 @@ export function AdminGalleryPage() {
                       {item.title || "Untitled image"}
                     </h2>
                   </div>
-                  {item.isFeatured ? <Badge variant="success">Featured</Badge> : null}
+                  <div className="flex flex-wrap gap-2">
+                    {item.isFeatured ? <Badge variant="success">Featured</Badge> : null}
+                    <Badge variant={item.isPublished ? "success" : "muted"}>
+                      {item.isPublished ? "Published" : "Draft"}
+                    </Badge>
+                  </div>
                 </div>
                 <p className="text-sm leading-7 text-ink-700/75">{item.caption}</p>
                 <div className="flex flex-wrap gap-3">
@@ -242,6 +248,18 @@ export function AdminGalleryPage() {
                           ...current,
                           displayOrder: Number(event.target.value),
                         }))
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
+                    <div>
+                      <p className="font-semibold text-ink-900">Published</p>
+                      <p className="text-sm text-ink-700/65">Show this image publicly.</p>
+                    </div>
+                    <Switch
+                      checked={draft.isPublished}
+                      onCheckedChange={(value) =>
+                        setDraft((current) => ({ ...current, isPublished: value }))
                       }
                     />
                   </div>

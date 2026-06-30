@@ -32,6 +32,11 @@ const serviceSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    priceType: {
+      type: String,
+      enum: ["fixed", "starting_at", "tbd"],
+      default: "fixed",
+    },
     durationMinutes: {
       type: Number,
       required: true,
@@ -82,6 +87,10 @@ const serviceSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isPublished: {
+      type: Boolean,
+      default: true,
+    },
     displayOrder: {
       type: Number,
       default: 0,
@@ -113,6 +122,10 @@ serviceSchema.pre("validate", function fillServiceDescriptions(next) {
 
   if (!this.requiresDeposit) {
     this.depositAmount = 0;
+  }
+
+  if (this.priceType === "tbd") {
+    this.price = 0;
   }
 
   next();

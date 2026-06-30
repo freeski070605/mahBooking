@@ -1,6 +1,6 @@
-# MAH Booking
+# MAH Esti
 
-MAH Booking is a full-stack booking platform for a solo beauty professional. It combines a premium client-facing experience with a calm, novice-friendly admin dashboard for services, gallery management, appointments, and availability.
+MAH Esti is a full-stack booking and CRM platform for a solo esthetician. It combines a mobile-first client booking request flow with a calm, novice-friendly admin dashboard for services, customers, inquiries, gallery management, appointments, settings, and availability.
 
 ## Stack
 
@@ -16,9 +16,11 @@ MAH Booking is a full-stack booking platform for a solo beauty professional. It 
 ## Features
 
 - Public pages: home, services, gallery, booking, policies, contact, client account
-- Admin pages: dashboard, appointments, services, gallery, availability, clients, settings
-- Service CRUD with image upload and replacement
-- Gallery CRUD with featured image support
+- Admin pages: dashboard, appointments, services, inquiries, gallery, availability, customers, settings
+- Service CRUD with image upload, price display types, draft/publish, and esthetician prep/aftercare fields
+- Gallery CRUD with featured and publish/unpublish support
+- Customer CRM with intake history, booking history, skin notes, private notes, and follow-up notes
+- Contact inquiries/leads with admin status tracking and customer conversion
 - Booking slot generation that respects weekly hours, breaks, blocked dates, date overrides, service duration plus buffer, and existing appointments
 - Clean bootstrap script for an initial admin account plus base settings and availability
 
@@ -92,6 +94,7 @@ This clears existing collections and creates:
 - one admin account
 - default availability
 - business settings
+- editable starter esthetician services
 
 5. Start the app
 

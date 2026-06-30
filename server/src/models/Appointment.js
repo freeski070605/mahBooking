@@ -38,6 +38,7 @@ const appointmentSchema = new mongoose.Schema(
       name: String,
       category: String,
       price: Number,
+      priceType: String,
       durationMinutes: Number,
       bufferMinutes: Number,
       imageUrl: String,
@@ -142,6 +143,15 @@ const appointmentSchema = new mongoose.Schema(
         type: String,
         trim: true,
         default: "",
+      },
+      medicationsOrConditions: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      consentToContact: {
+        type: Boolean,
+        default: false,
       },
       notes: {
         type: String,

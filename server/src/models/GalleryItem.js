@@ -29,6 +29,10 @@ const galleryItemSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isPublished: {
+      type: Boolean,
+      default: true,
+    },
     displayOrder: {
       type: Number,
       default: 0,

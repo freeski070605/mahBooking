@@ -83,6 +83,16 @@ export function AdminSettingsPage() {
               }
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="owner-name">Display/owner name</Label>
+            <Input
+              id="owner-name"
+              value={draft.ownerName || ""}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, ownerName: event.target.value }))
+              }
+            />
+          </div>
           <div className="space-y-2 lg:col-span-2">
             <Label htmlFor="business-description">Description</Label>
             <Textarea
@@ -126,6 +136,16 @@ export function AdminSettingsPage() {
               value={draft.address}
               onChange={(event) =>
                 setDraft((current) => ({ ...current, address: event.target.value }))
+              }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="city">City/location</Label>
+            <Input
+              id="city"
+              value={draft.city || ""}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, city: event.target.value }))
               }
             />
           </div>
@@ -354,6 +374,58 @@ export function AdminSettingsPage() {
                 setDraft((current) => ({
                   ...current,
                   branding: { ...current.branding, heroImageUrl: event.target.value },
+                }))
+              }
+            />
+          </div>
+          <div className="space-y-2 lg:col-span-2">
+            <Label htmlFor="hero-headline">Homepage hero headline</Label>
+            <Input
+              id="hero-headline"
+              value={draft.branding.heroHeadline || ""}
+              onChange={(event) =>
+                setDraft((current) => ({
+                  ...current,
+                  branding: { ...current.branding, heroHeadline: event.target.value },
+                }))
+              }
+            />
+          </div>
+          <div className="space-y-2 lg:col-span-2">
+            <Label htmlFor="hero-subheadline">Homepage hero subheadline</Label>
+            <Textarea
+              id="hero-subheadline"
+              value={draft.branding.heroSubheadline || ""}
+              onChange={(event) =>
+                setDraft((current) => ({
+                  ...current,
+                  branding: { ...current.branding, heroSubheadline: event.target.value },
+                }))
+              }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="cta-primary">Primary CTA copy</Label>
+            <Input
+              id="cta-primary"
+              value={draft.branding.ctaPrimary || ""}
+              onChange={(event) =>
+                setDraft((current) => ({
+                  ...current,
+                  branding: { ...current.branding, ctaPrimary: event.target.value },
+                }))
+              }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="cta-secondary">Secondary CTA copy</Label>
+            <Input
+              id="cta-secondary"
+              value={draft.branding.ctaSecondary || ""}
+              onChange={(event) =>
+                setDraft((current) => ({
+                  ...current,
+                  branding: { ...current.branding, ctaSecondary: event.target.value },
                 }))
               }
             />

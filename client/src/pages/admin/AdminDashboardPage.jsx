@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Clock3, Sparkles, Users } from "lucide-react";
+import { CalendarDays, CheckCircle2, ClipboardCheck, Clock3, Inbox, Sparkles, Users } from "lucide-react";
 import { dashboardApi, settingsApi } from "@/lib/api";
 import { dashboardQuickActions } from "@/data/navigation";
 import { formatAppointmentLabel } from "@/lib/utils";
@@ -36,7 +36,9 @@ export function AdminDashboardPage() {
           </p>
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="font-display text-5xl text-ink-900">{businessName}</h1>
+              <h1 className="font-display text-5xl text-ink-900">
+                {businessName} Control Center
+              </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-700/70">
                 Start here for a quick look at today's schedule, what is coming up
                 next, and the actions you are most likely to use.
@@ -59,16 +61,16 @@ export function AdminDashboardPage() {
         <>
           <div className="grid gap-5 lg:grid-cols-5">
             <MetricCard
-              label="Today's appointments"
-              value={stats?.todayCount || 0}
-              helper="Quick glance at today's schedule"
-              icon={CalendarDays}
-            />
-            <MetricCard
-              label="Upcoming"
+              label="Pending booking requests"
               value={stats?.pendingCount || 0}
               helper="Requests waiting for review"
               icon={Clock3}
+            />
+            <MetricCard
+              label="Confirmed appointments"
+              value={stats?.confirmedAppointmentCount || 0}
+              helper="Upcoming confirmed visits"
+              icon={CheckCircle2}
             />
             <MetricCard
               label="Total customers"
@@ -83,14 +85,20 @@ export function AdminDashboardPage() {
               icon={Sparkles}
             />
             <MetricCard
-              label="Upcoming"
-              value={stats?.upcomingCount || 0}
-              helper="Pending or confirmed visits"
-              icon={CalendarDays}
+              label="Draft services"
+              value={stats?.draftServiceCount || 0}
+              helper="Saved but not public yet"
+              icon={ClipboardCheck}
+            />
+            <MetricCard
+              label="New inquiries"
+              value={stats?.newInquiryCount || 0}
+              helper="Contact form leads"
+              icon={Inbox}
             />
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-4">
+          <div className="grid gap-5 lg:grid-cols-5">
             {dashboardQuickActions.map((action) => {
               const Icon = action.icon;
               return (
@@ -112,6 +120,33 @@ export function AdminDashboardPage() {
               );
             })}
           </div>
+
+          <Card>
+            <CardContent className="space-y-4 p-6">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
+                  Setup checklist
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold text-ink-900">
+                  Launch basics
+                </h2>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {[
+                  "Add your first service",
+                  "Set your availability",
+                  "Add contact info",
+                  "Add policies",
+                  "Publish your booking page",
+                  "Add gallery images",
+                ].map((item) => (
+                  <div key={item} className="rounded-[1.25rem] bg-surface-50 p-4 text-sm font-semibold text-ink-800">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="grid gap-5 xl:grid-cols-2">
             <Card>

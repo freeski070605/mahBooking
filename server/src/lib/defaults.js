@@ -108,11 +108,13 @@ function buildDefaultBusinessSettings() {
   return {
     key: "default",
     businessName: "MAH Esti",
+    ownerName: "MAH Owner",
     tagline: defaultBusinessCopy.tagline,
     description: defaultBusinessCopy.description,
     contactEmail: "hello@mahesti.com",
     contactPhone: "(555) 274-5612",
     address: "Atlanta, GA",
+    city: "Atlanta, GA",
     policies: {
       ...defaultBusinessCopy.policies,
     },
@@ -135,6 +137,10 @@ function buildDefaultBusinessSettings() {
       logoUrl: "",
       heroImageUrl:
         "https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+Esti",
+      heroHeadline: "Esthetician appointments with a calm, easy rhythm.",
+      heroSubheadline: defaultBusinessCopy.tagline,
+      ctaPrimary: "Request appointment",
+      ctaSecondary: "Explore services",
     },
   };
 }

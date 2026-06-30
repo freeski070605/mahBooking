@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { galleryApi, servicesApi, settingsApi } from "@/lib/api";
-import { formatCurrency, formatDuration } from "@/lib/utils";
+import { formatDuration, formatServicePrice } from "@/lib/utils";
 import { experiencePillars, highlightFeatures } from "@/data/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -51,22 +51,24 @@ export function HomePage() {
             </Badge>
             <div className="space-y-5">
               <h1 className="max-w-3xl font-display text-6xl leading-[0.95] text-ink-900 sm:text-7xl">
-                Esthetician appointments with a calm, easy rhythm.
+                {settings?.branding?.heroHeadline ||
+                  "Esthetician appointments with a calm, easy rhythm."}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-ink-700/80">
-                {settings?.tagline ||
+                {settings?.branding?.heroSubheadline ||
+                  settings?.tagline ||
                   "Personalized skin care, smooth booking, and thoughtful follow-up from consultation to aftercare."}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/booking">
-                  Reserve your appointment
+                  {settings?.branding?.ctaPrimary || "Request appointment"}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="secondary" size="lg">
-                <Link to="/services">Explore services</Link>
+                <Link to="/services">{settings?.branding?.ctaSecondary || "Explore services"}</Link>
               </Button>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
@@ -157,7 +159,7 @@ export function HomePage() {
                         </h3>
                       </div>
                       <p className="text-base font-semibold text-surface-700">
-                        {formatCurrency(service.price)}
+                        {formatServicePrice(service)}
                       </p>
                     </div>
                     <p className="text-sm leading-7 text-ink-700/75">
@@ -182,8 +184,8 @@ export function HomePage() {
         ) : (
           <div className="mt-8">
             <EmptyState
-              title="Service menu coming soon"
-              description="The service menu is being refreshed. Check back soon or reach out for current availability."
+              title="Services are being updated"
+              description="Active services will appear here as soon as they are published in the admin dashboard."
             />
           </div>
         )}
@@ -234,8 +236,8 @@ export function HomePage() {
             </div>
           ) : (
             <EmptyState
-              title="Gallery updates coming soon"
-              description="New work is on the way. Check back soon for recent finishes and studio favorites."
+              title="Gallery is being curated"
+              description="Published gallery images will appear here once the studio has added them."
             />
           )}
         </div>
@@ -279,7 +281,7 @@ export function HomePage() {
         <SectionHeading
           eyebrow="The MAH experience"
           title="What a visit should feel like."
-          description="Every part of the visit is shaped around comfort, clarity, and a polished result."
+          description="Every part of the visit is shaped around comfort, clarity, skin goals, and thoughtful aftercare."
           align="center"
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-2">

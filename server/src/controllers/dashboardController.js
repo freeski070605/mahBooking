@@ -2,6 +2,7 @@ const Service = require("../models/Service");
 const GalleryItem = require("../models/GalleryItem");
 const Appointment = require("../models/Appointment");
 const Client = require("../models/Client");
+const Inquiry = require("../models/Inquiry");
 
 async function getDashboardSummary(_req, res) {
   const startOfToday = new Date();
@@ -15,8 +16,11 @@ async function getDashboardSummary(_req, res) {
     pendingAppointments,
     upcomingAppointments,
     activeServiceCount,
+    draftServiceCount,
     galleryCount,
     clientCount,
+    confirmedAppointmentCount,
+    newInquiryCount,
   ] =
     await Promise.all([
       Appointment.find({
@@ -34,8 +38,11 @@ async function getDashboardSummary(_req, res) {
         .sort({ startAt: 1 })
         .limit(6),
       Service.countDocuments({ isActive: true }),
+      Service.countDocuments({ isPublished: false }),
       GalleryItem.countDocuments(),
       Client.countDocuments(),
+      Appointment.countDocuments({ status: "confirmed", startAt: { $gte: startOfToday } }),
+      Inquiry.countDocuments({ status: "new" }),
     ]);
 
   res.json({
@@ -44,8 +51,11 @@ async function getDashboardSummary(_req, res) {
       pendingCount: pendingAppointments.length,
       upcomingCount: upcomingAppointments.length,
       activeServiceCount,
+      draftServiceCount,
       galleryCount,
       clientCount,
+      confirmedAppointmentCount,
+      newInquiryCount,
     },
     todayAppointments,
     pendingAppointments,

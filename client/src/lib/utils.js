@@ -14,6 +14,20 @@ export function formatCurrency(value) {
   }).format(Number(value || 0));
 }
 
+export function formatServicePrice(service) {
+  if (service?.priceType === "tbd") {
+    return "TBD";
+  }
+
+  const price = formatCurrency(service?.price || 0);
+
+  if (service?.priceType === "starting_at") {
+    return `Starting at ${price}`;
+  }
+
+  return price;
+}
+
 export function formatDuration(minutes) {
   const hrs = Math.floor(minutes / 60);
   const mins = minutes % 60;

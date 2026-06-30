@@ -9,6 +9,7 @@ async function getServices(req, res) {
 
   if (!isAdminScope) {
     query.isActive = true;
+    query.isPublished = true;
   }
 
   if (req.query.category) {

@@ -24,6 +24,7 @@ const serviceSchema = z.object({
   fullDescription: z.string().trim().optional().default(""),
   description: z.string().trim().optional().default(""),
   price: z.coerce.number().min(0),
+  priceType: z.enum(["fixed", "starting_at", "tbd"]).optional().default("fixed"),
   durationMinutes: z.coerce.number().int().min(15),
   bufferMinutes: z.coerce.number().int().min(0).default(0),
   imageUrl: z.string().trim().optional().default(""),
@@ -35,6 +36,7 @@ const serviceSchema = z.object({
   contraindications: z.string().trim().optional().default(""),
   consultationRequired: z.coerce.boolean().optional().default(false),
   isActive: z.coerce.boolean().optional().default(true),
+  isPublished: z.coerce.boolean().optional().default(true),
   displayOrder: z.coerce.number().int().min(0).optional().default(0),
   featured: z.coerce.boolean().optional().default(false),
 });
@@ -51,7 +53,9 @@ const intakeAnswersSchema = z
     recentWaxing: z.string().trim().optional().default(""),
     recentChemicalPeels: z.string().trim().optional().default(""),
     pregnancyStatus: z.string().trim().optional().default(""),
+    medicationsOrConditions: z.string().trim().optional().default(""),
     appointmentGoals: z.string().trim().optional().default(""),
+    consentToContact: z.coerce.boolean().optional().default(false),
     notes: z.string().trim().optional().default(""),
   })
   .optional()
@@ -64,8 +68,20 @@ const gallerySchema = z.object({
   imageUrl: z.string().trim().min(1),
   imagePublicId: z.string().trim().optional().default(""),
   isFeatured: z.coerce.boolean().optional().default(false),
+  isPublished: z.coerce.boolean().optional().default(true),
   displayOrder: z.coerce.number().int().min(0).optional().default(0),
 });
+
+const inquirySchema = z.object({
+  name: z.string().trim().min(2),
+  email: z.string().trim().email().optional().or(z.literal("")).default(""),
+  phone: z.string().trim().optional().default(""),
+  message: z.string().trim().min(5),
+  status: z.enum(["new", "contacted", "booked", "closed"]).optional().default("new"),
+  privateNote: z.string().trim().optional().default(""),
+});
+
+const inquiryUpdateSchema = inquirySchema.partial();
 
 const appointmentCreateSchema = z.object({
   clientName: z.string().trim().min(2),
@@ -107,6 +123,7 @@ const clientSchema = z.object({
   skinConcerns: z.string().trim().optional().default(""),
   allergies: z.string().trim().optional().default(""),
   currentSkincareRoutine: z.string().trim().optional().default(""),
+  recommendedFollowUp: z.string().trim().optional().default(""),
   notes: z.string().trim().optional().default(""),
   internalNotes: z.string().trim().optional().default(""),
   tags: z.array(z.string().trim()).optional().default([]),
@@ -164,11 +181,13 @@ const availabilitySchema = z.object({
 
 const settingsSchema = z.object({
   businessName: z.string().trim().min(2),
+  ownerName: z.string().trim().optional().default(""),
   tagline: z.string().trim().optional().default(""),
   description: z.string().trim().optional().default(""),
   contactEmail: z.string().trim().email(),
   contactPhone: z.string().trim().min(7),
   address: z.string().trim().optional().default(""),
+  city: z.string().trim().optional().default(""),
   policies: z.object({
     cancellation: z.string().trim().optional().default(""),
     lateness: z.string().trim().optional().default(""),
@@ -199,6 +218,10 @@ const settingsSchema = z.object({
     neutralColor: z.string().trim().optional().default("#f7efe8"),
     logoUrl: z.string().trim().optional().default(""),
     heroImageUrl: z.string().trim().optional().default(""),
+    heroHeadline: z.string().trim().optional().default(""),
+    heroSubheadline: z.string().trim().optional().default(""),
+    ctaPrimary: z.string().trim().optional().default("Request appointment"),
+    ctaSecondary: z.string().trim().optional().default("Explore services"),
   }),
 });
 
@@ -211,6 +234,8 @@ module.exports = {
   availabilitySchema,
   clientSchema,
   gallerySchema,
+  inquirySchema,
+  inquiryUpdateSchema,
   serviceSchema,
   settingsSchema,
   slotsQuerySchema,

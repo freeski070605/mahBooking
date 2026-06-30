@@ -8,6 +8,7 @@ const settingsRoutes = require("./settingsRoutes");
 const uploadRoutes = require("./uploadRoutes");
 const clientRoutes = require("./clientRoutes");
 const dashboardRoutes = require("./dashboardRoutes");
+const inquiryRoutes = require("./inquiryRoutes");
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/settings", settingsRoutes);
 router.use("/uploads", uploadRoutes);
 router.use("/clients", clientRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/inquiries", inquiryRoutes);
 
 module.exports = router;

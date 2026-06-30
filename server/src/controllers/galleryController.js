@@ -4,6 +4,12 @@ const { ApiError } = require("../utils/apiError");
 
 async function getGallery(req, res) {
   const query = {};
+  const isAdminScope = req.user?.role === "admin" && req.query.scope === "all";
+
+  if (!isAdminScope) {
+    query.isPublished = true;
+  }
+
   if (req.query.category) {
     query.category = req.query.category;
   }

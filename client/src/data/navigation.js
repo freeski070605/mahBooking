@@ -2,6 +2,7 @@ import {
   CalendarDays,
   Clock3,
   Images,
+  Inbox,
   LayoutDashboard,
   Plus,
   Settings,
@@ -22,6 +23,7 @@ export const adminNavigation = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Appointments", href: "/admin/appointments", icon: CalendarDays },
   { label: "Services", href: "/admin/services", icon: Sparkles },
+  { label: "Inquiries", href: "/admin/inquiries", icon: Inbox },
   { label: "Gallery", href: "/admin/gallery", icon: Images },
   { label: "Availability", href: "/admin/availability", icon: Clock3 },
   { label: "Clients", href: "/admin/clients", icon: Users },
@@ -52,6 +54,18 @@ export const dashboardQuickActions = [
     href: "/admin/appointments",
     icon: CalendarDays,
     hint: "Review pending requests, details, intake answers, and statuses.",
+  },
+  {
+    label: "Set Availability",
+    href: "/admin/availability",
+    icon: Clock3,
+    hint: "Adjust hours, blocked dates, and booking notice.",
+  },
+  {
+    label: "Update Contact Info",
+    href: "/admin/settings",
+    icon: Settings,
+    hint: "Edit phone, email, city, Instagram, and homepage copy.",
   },
 ];
 

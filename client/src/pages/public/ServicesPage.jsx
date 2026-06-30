@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { servicesApi } from "@/lib/api";
-import { formatCurrency, formatDuration, uniqueValues } from "@/lib/utils";
+import { formatCurrency, formatDuration, formatServicePrice, uniqueValues } from "@/lib/utils";
 import { PageIntro } from "@/components/shared/PageIntro";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { LoadingBlock } from "@/components/shared/LoadingBlock";
@@ -75,7 +75,7 @@ export function ServicesPage() {
                     <h2 className="mt-2 text-2xl font-semibold text-ink-900">{service.name}</h2>
                   </div>
                   <p className="text-lg font-semibold text-surface-700">
-                    {formatCurrency(service.price)}
+                    {formatServicePrice(service)}
                   </p>
                 </div>
                 <p className="text-sm leading-7 text-ink-700/75">

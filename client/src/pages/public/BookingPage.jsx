@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ import {
   formatCurrency,
   formatDuration,
   formatLongDate,
+  formatServicePrice,
   getErrorMessage,
 } from "@/lib/utils";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -29,6 +30,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 const bookingSchema = z.object({
@@ -45,7 +47,9 @@ const bookingSchema = z.object({
   recentWaxing: z.string().trim().optional(),
   recentChemicalPeels: z.string().trim().optional(),
   pregnancyStatus: z.string().trim().optional(),
+  medicationsOrConditions: z.string().trim().optional(),
   appointmentGoals: z.string().trim().optional(),
+  consentToContact: z.boolean().optional(),
   notes: z.string().trim().optional(),
 });
 
@@ -101,6 +105,8 @@ export function BookingPage() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
     reset,
   } = useForm({
@@ -119,7 +125,9 @@ export function BookingPage() {
       recentWaxing: "",
       recentChemicalPeels: "",
       pregnancyStatus: "",
+      medicationsOrConditions: "",
       appointmentGoals: "",
+      consentToContact: true,
       notes: "",
     },
   });
@@ -139,7 +147,9 @@ export function BookingPage() {
       recentWaxing: "",
       recentChemicalPeels: "",
       pregnancyStatus: "",
+      medicationsOrConditions: "",
       appointmentGoals: "",
+      consentToContact: true,
       notes: "",
     });
   }, [reset, user]);
@@ -172,6 +182,10 @@ export function BookingPage() {
     settingsQuery.data?.settings?.bookingSettings?.confirmationMessage ||
     "Your appointment request has been received.";
   const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const consentToContact = useWatch({
+    control,
+    name: "consentToContact",
+  });
 
   function submitBooking(values) {
     if (!selectedService || !selectedDate || !selectedSlot) {
@@ -198,7 +212,9 @@ export function BookingPage() {
         recentWaxing: values.recentWaxing || "",
         recentChemicalPeels: values.recentChemicalPeels || "",
         pregnancyStatus: values.pregnancyStatus || "",
+        medicationsOrConditions: values.medicationsOrConditions || "",
         appointmentGoals: values.appointmentGoals || "",
+        consentToContact: Boolean(values.consentToContact),
         notes: values.notes || "",
       },
     });
@@ -279,7 +295,7 @@ export function BookingPage() {
                         </h3>
                       </div>
                       <p className="text-base font-semibold text-surface-700">
-                        {formatCurrency(service.price)}
+                        {formatServicePrice(service)}
                       </p>
                     </div>
                     <p className="text-sm leading-7 text-ink-700/75">
@@ -347,7 +363,7 @@ export function BookingPage() {
                 ) : null}
                 <div className="flex items-center justify-between text-sm text-ink-700/65">
                   <span>{formatDuration(selectedService.durationMinutes)}</span>
-                  <span>{formatCurrency(selectedService.price)}</span>
+                  <span>{formatServicePrice(selectedService)}</span>
                 </div>
               </div>
             </CardContent>
@@ -430,7 +446,7 @@ export function BookingPage() {
                   {selectedService.name}
                 </h2>
                 <p className="text-sm leading-6 text-ink-700/70">
-                  {formatCurrency(selectedService.price)} -{" "}
+                  {formatServicePrice(selectedService)} -{" "}
                   {formatDuration(selectedService.durationMinutes)}
                 </p>
               </div>
@@ -499,9 +515,12 @@ export function BookingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="skinConcerns">Skin concerns</Label>
+                  <p className="text-xs leading-5 text-ink-700/60">
+                    Options to mention: Acne, Dryness, Oiliness, Dark spots, Texture, Sensitivity, Ingrown hairs, Hyperpigmentation, Fine lines, Not sure.
+                  </p>
                   <Textarea
                     id="skinConcerns"
-                    placeholder="Acne, dryness, hyperpigmentation, texture, sensitivity..."
+                    placeholder="Example: Dryness, sensitivity, and dark spots"
                     {...register("skinConcerns")}
                   />
                 </div>
@@ -544,11 +563,29 @@ export function BookingPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="medicationsOrConditions">Medications or conditions</Label>
+                  <Textarea
+                    id="medicationsOrConditions"
+                    placeholder="Share medications, skin conditions, recent treatments, or anything that may affect your service."
+                    {...register("medicationsOrConditions")}
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="notes">Appointment notes</Label>
                   <Textarea
                     id="notes"
                     placeholder="Anything you'd like the studio to know before your visit?"
                     {...register("notes")}
+                  />
+                </div>
+                <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
+                  <div>
+                    <p className="font-semibold text-ink-900">Consent to contact</p>
+                    <p className="text-sm text-ink-700/65">Allow MAH Esti to contact you about this request.</p>
+                  </div>
+                  <Switch
+                    checked={Boolean(consentToContact)}
+                    onCheckedChange={(value) => setValue("consentToContact", value)}
                   />
                 </div>
                 <div className="flex flex-wrap gap-3">

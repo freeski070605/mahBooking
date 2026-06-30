@@ -84,6 +84,13 @@ export const clientsApi = {
   remove: (id) => api.delete(`/clients/${id}`).then(unwrap),
 };
 
+export const inquiriesApi = {
+  list: (params = {}) => api.get("/inquiries", { params }).then(unwrap),
+  create: (payload) => api.post("/inquiries", payload).then(unwrap),
+  update: (id, payload) => api.put(`/inquiries/${id}`, payload).then(unwrap),
+  convert: (id) => api.post(`/inquiries/${id}/convert`).then(unwrap),
+};
+
 export const dashboardApi = {
   summary: () => api.get("/dashboard/summary").then(unwrap),
 };

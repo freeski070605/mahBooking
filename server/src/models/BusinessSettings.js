@@ -23,6 +23,16 @@ const businessSettingsSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    ownerName: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    city: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     contactEmail: {
       type: String,
       trim: true,
@@ -62,6 +72,10 @@ const businessSettingsSchema = new mongoose.Schema(
       neutralColor: { type: String, default: "#f7efe8" },
       logoUrl: { type: String, default: "" },
       heroImageUrl: { type: String, default: "" },
+      heroHeadline: { type: String, default: "" },
+      heroSubheadline: { type: String, default: "" },
+      ctaPrimary: { type: String, default: "Request appointment" },
+      ctaSecondary: { type: String, default: "Explore services" },
     },
   },
   {
