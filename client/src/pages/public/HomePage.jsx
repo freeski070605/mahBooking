@@ -12,6 +12,8 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { LoadingBlock } from "@/components/shared/LoadingBlock";
 
+const MotionDiv = motion.div;
+
 export function HomePage() {
   const settingsQuery = useQuery({
     queryKey: ["settings"],
@@ -38,22 +40,22 @@ export function HomePage() {
     <div className="overflow-hidden">
       <section className="page-shell pb-8">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="space-y-8"
           >
             <Badge className="rounded-full px-4 py-2 text-[0.68rem] tracking-[0.26em]">
-              Healthy hair. Soft luxury. Thoughtful care.
+              Skin care. Smooth booking. Thoughtful follow-up.
             </Badge>
             <div className="space-y-5">
               <h1 className="max-w-3xl font-display text-6xl leading-[0.95] text-ink-900 sm:text-7xl">
-                Healthy hair appointments with a polished, easy rhythm.
+                Esthetician appointments with a calm, easy rhythm.
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-ink-700/80">
                 {settings?.tagline ||
-                  "Healthy hair, polished finishes, and care that feels calm from start to finish."}
+                  "Personalized skin care, smooth booking, and thoughtful follow-up from consultation to aftercare."}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -78,9 +80,9 @@ export function HomePage() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.08 }}
@@ -91,9 +93,9 @@ export function HomePage() {
               <img
                 src={
                   settings?.branding?.heroImageUrl ||
-                  "https://placehold.co/1200x1600/f3e9df/2f2622?text=MAH+Booking"
+                  "https://placehold.co/1200x1600/f3e9df/2f2622?text=MAH+Esti"
                 }
-                alt="MAH Booking brand hero"
+                alt="MAH Esti brand hero"
                 className="aspect-[4/5] w-full rounded-[1.7rem] object-cover"
               />
               <div className="absolute bottom-8 left-8 right-8 rounded-[1.6rem] border border-white/70 bg-white/85 p-5 shadow-soft backdrop-blur">
@@ -103,7 +105,7 @@ export function HomePage() {
                       Signature experience
                     </p>
                     <p className="mt-2 font-display text-3xl text-ink-900">
-                      Calm care, polished finishes, warm detail
+                      Calm skin care, clear prep, warm detail
                     </p>
                   </div>
                   <div className="rounded-full bg-surface-500 p-3 text-white">
@@ -112,14 +114,14 @@ export function HomePage() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         </div>
       </section>
 
       <section className="page-shell pt-6">
         <SectionHeading
           eyebrow="Featured services"
-          title="Choose the service that fits your next look."
+          title="Choose the service that fits your skin goals."
           description="Pricing, timing, and service details are laid out clearly so booking feels simple from the start."
         />
         {servicesQuery.isLoading ? (
@@ -131,7 +133,7 @@ export function HomePage() {
         ) : featuredServices.length ? (
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {featuredServices.map((service, index) => (
-              <motion.div
+              <MotionDiv
                 key={service._id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -140,7 +142,7 @@ export function HomePage() {
               >
                 <Card className="h-full overflow-hidden">
                   <img
-                    src={service.imageUrl}
+                    src={service.imageUrl || "https://placehold.co/900x1200/f7ede7/372d2a?text=MAH+Esti"}
                     alt={service.name}
                     className="aspect-[4/4.8] w-full object-cover"
                   />
@@ -159,7 +161,7 @@ export function HomePage() {
                       </p>
                     </div>
                     <p className="text-sm leading-7 text-ink-700/75">
-                      {service.description}
+                      {service.shortDescription || service.description}
                     </p>
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-ink-700/65">
@@ -174,7 +176,7 @@ export function HomePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </MotionDiv>
             ))}
           </div>
         ) : (
@@ -199,7 +201,7 @@ export function HomePage() {
               </h2>
               <p className="text-sm leading-7 text-white/75">
                 {settings?.description ||
-                  "MAH Booking is a warm beauty studio where healthy hair care, refined styling, and thoughtful timing come together in an elevated appointment experience."}
+                  "MAH Esti is a warm esthetician studio where personalized services, thoughtful intake, and clear aftercare come together in an elevated appointment experience."}
               </p>
             </CardContent>
           </Card>

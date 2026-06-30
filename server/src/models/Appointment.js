@@ -41,6 +41,8 @@ const appointmentSchema = new mongoose.Schema(
       durationMinutes: Number,
       bufferMinutes: Number,
       imageUrl: String,
+      requiresDeposit: Boolean,
+      depositAmount: Number,
     },
     date: {
       type: Date,
@@ -84,6 +86,68 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+    },
+    intakeAnswers: {
+      firstTimeClient: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      skinType: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      skinConcerns: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      allergies: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      currentSkincareRoutine: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      retinolUse: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      accutaneUse: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      recentWaxing: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      recentChemicalPeels: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      pregnancyStatus: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      appointmentGoals: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      notes: {
+        type: String,
+        trim: true,
+        default: "",
+      },
     },
     source: {
       type: String,

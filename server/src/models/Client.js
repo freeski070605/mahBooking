@@ -9,16 +9,50 @@ const clientSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
+    },
+    firstName: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    lastName: {
+      type: String,
+      trim: true,
+      default: "",
     },
     email: {
       type: String,
       trim: true,
       lowercase: true,
-      default: "",
+      default: undefined,
     },
     phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    birthday: {
+      type: Date,
+      default: null,
+    },
+    skinType: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    skinConcerns: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    allergies: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    currentSkincareRoutine: {
       type: String,
       trim: true,
       default: "",
@@ -56,5 +90,19 @@ const clientSchema = new mongoose.Schema(
 );
 
 clientSchema.index({ email: 1 }, { unique: true, sparse: true });
+
+clientSchema.pre("validate", function fillClientName(next) {
+  if (!this.name) {
+    this.name = [this.firstName, this.lastName].filter(Boolean).join(" ").trim();
+  }
+
+  if ((!this.firstName || !this.lastName) && this.name) {
+    const [firstName, ...rest] = this.name.split(" ");
+    this.firstName = this.firstName || firstName || "";
+    this.lastName = this.lastName || rest.join(" ");
+  }
+
+  next();
+});
 
 module.exports = mongoose.model("Client", clientSchema);

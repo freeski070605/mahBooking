@@ -10,7 +10,14 @@ async function getDashboardSummary(_req, res) {
   const endOfToday = new Date(startOfToday);
   endOfToday.setDate(endOfToday.getDate() + 1);
 
-  const [todayAppointments, upcomingAppointments, serviceCount, galleryCount, clientCount] =
+  const [
+    todayAppointments,
+    pendingAppointments,
+    upcomingAppointments,
+    activeServiceCount,
+    galleryCount,
+    clientCount,
+  ] =
     await Promise.all([
       Appointment.find({
         startAt: {
@@ -19,13 +26,14 @@ async function getDashboardSummary(_req, res) {
         },
         status: { $ne: "canceled" },
       }).sort({ startAt: 1 }),
+      Appointment.find({ status: "pending" }).sort({ startAt: 1 }).limit(6),
       Appointment.find({
         startAt: { $gte: startOfToday },
         status: { $in: ["pending", "confirmed"] },
       })
         .sort({ startAt: 1 })
         .limit(6),
-      Service.countDocuments(),
+      Service.countDocuments({ isActive: true }),
       GalleryItem.countDocuments(),
       Client.countDocuments(),
     ]);
@@ -33,12 +41,14 @@ async function getDashboardSummary(_req, res) {
   res.json({
     stats: {
       todayCount: todayAppointments.length,
+      pendingCount: pendingAppointments.length,
       upcomingCount: upcomingAppointments.length,
-      serviceCount,
+      activeServiceCount,
       galleryCount,
       clientCount,
     },
     todayAppointments,
+    pendingAppointments,
     upcomingAppointments,
   });
 }

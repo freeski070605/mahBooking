@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Clock3, Images, Scissors, Users } from "lucide-react";
+import { CalendarDays, Clock3, Sparkles, Users } from "lucide-react";
 import { dashboardApi, settingsApi } from "@/lib/api";
 import { dashboardQuickActions } from "@/data/navigation";
 import { formatAppointmentLabel } from "@/lib/utils";
@@ -23,8 +23,9 @@ export function AdminDashboardPage() {
 
   const stats = dashboardQuery.data?.stats;
   const todayAppointments = dashboardQuery.data?.todayAppointments || [];
+  const pendingAppointments = dashboardQuery.data?.pendingAppointments || [];
   const upcomingAppointments = dashboardQuery.data?.upcomingAppointments || [];
-  const businessName = settingsQuery.data?.settings?.businessName || "MAH Booking";
+  const businessName = settingsQuery.data?.settings?.businessName || "MAH Esti";
 
   return (
     <div className="space-y-6">
@@ -65,27 +66,27 @@ export function AdminDashboardPage() {
             />
             <MetricCard
               label="Upcoming"
-              value={stats?.upcomingCount || 0}
-              helper="Pending or confirmed visits"
+              value={stats?.pendingCount || 0}
+              helper="Requests waiting for review"
               icon={Clock3}
             />
             <MetricCard
-              label="Services"
-              value={stats?.serviceCount || 0}
-              helper="Visible and inactive services"
-              icon={Scissors}
-            />
-            <MetricCard
-              label="Gallery images"
-              value={stats?.galleryCount || 0}
-              helper="Current brand visuals"
-              icon={Images}
-            />
-            <MetricCard
-              label="Clients"
+              label="Total customers"
               value={stats?.clientCount || 0}
-              helper="Saved client records"
+              helper="Saved customer records"
               icon={Users}
+            />
+            <MetricCard
+              label="Active services"
+              value={stats?.activeServiceCount || 0}
+              helper="Bookable service menu items"
+              icon={Sparkles}
+            />
+            <MetricCard
+              label="Upcoming"
+              value={stats?.upcomingCount || 0}
+              helper="Pending or confirmed visits"
+              icon={CalendarDays}
             />
           </div>
 
@@ -113,6 +114,48 @@ export function AdminDashboardPage() {
           </div>
 
           <div className="grid gap-5 xl:grid-cols-2">
+            <Card>
+              <CardContent className="space-y-4 p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-surface-600">
+                      Pending
+                    </p>
+                    <h2 className="mt-2 text-2xl font-semibold text-ink-900">
+                      Booking requests
+                    </h2>
+                  </div>
+                  <Button asChild variant="secondary">
+                    <Link to="/admin/appointments">Review</Link>
+                  </Button>
+                </div>
+                {pendingAppointments.length ? (
+                  <div className="space-y-4">
+                    {pendingAppointments.map((appointment) => (
+                      <div key={appointment._id} className="rounded-[1.5rem] border border-surface-100 bg-white p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div>
+                            <p className="font-semibold text-ink-900">{appointment.clientName}</p>
+                            <p className="text-sm text-ink-700/70">
+                              {appointment.serviceSnapshot.name}
+                            </p>
+                          </div>
+                          <StatusBadge status={appointment.status} />
+                        </div>
+                        <p className="mt-3 text-sm text-ink-700/70">
+                          {formatAppointmentLabel(appointment.startAt)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm leading-7 text-ink-700/70">
+                    No booking requests are waiting right now.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
             <Card>
               <CardContent className="space-y-4 p-6">
                 <div className="flex items-center justify-between">

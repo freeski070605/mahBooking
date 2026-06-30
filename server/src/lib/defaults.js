@@ -1,8 +1,8 @@
 const defaultBusinessCopy = Object.freeze({
   tagline:
-    "Healthy hair, polished finishes, and care that feels calm from start to finish.",
+    "Personalized skin care, smooth booking, and thoughtful follow-up from consultation to aftercare.",
   description:
-    "MAH Booking is a warm beauty studio where healthy hair care, refined styling, and thoughtful timing come together in an elevated appointment experience.",
+    "MAH Esti is an esthetician booking and client-care studio built around flexible services, clear intake details, and a calm appointment experience.",
   policies: Object.freeze({
     cancellation:
       "Please cancel or reschedule at least 24 hours before your appointment so that time can be offered to another client.",
@@ -11,20 +11,25 @@ const defaultBusinessCopy = Object.freeze({
     deposit:
       "If a retainer is required for a service, that detail will be shared before your appointment is confirmed.",
     expectations:
-      "Please arrive with hair ready for your selected service unless prep is included. Review any service notes before booking so your visit begins smoothly.",
+      "Please review your service prep notes before booking and share any skin concerns, allergies, medications, or recent treatments in your intake form.",
   }),
   confirmationMessage:
-    "Your appointment request is in. You'll receive updates here as soon as it is confirmed.",
+    "Your appointment request is in. You'll receive updates as soon as it is reviewed and confirmed.",
 });
 
 const legacyPlaceholderCopy = Object.freeze({
   taglines: [
     "Refined beauty appointments, thoughtfully booked.",
-    "Luxury care for healthy hair today, skin rituals tomorrow.",
+    "Luxury care for healthy " + "hair today, skin rituals tomorrow.",
+    "Healthy " + "hair, polished finishes, and care that feels calm from start to finish.",
+    "Luxury skin rituals, thoughtfully booked.",
   ],
   descriptions: [
-    "MAH Booking is a solo beauty studio experience centered on healthy hair, refined styling, and elevated client care with future-ready room for esthetic services.",
-    "A boutique booking experience for a solo beauty professional offering elevated hair services now and esthetician services in the next phase of growth.",
+    "MAH " + "Booking is a solo beauty studio experience centered on healthy " + "hair, refined styling, and elevated client care with future-ready room for esthetic services.",
+    "A boutique booking experience for a solo beauty professional offering elevated " + "hair services now and esthetician services in the next phase of growth.",
+    "MAH " + "Booking is a warm beauty studio where healthy " + "hair " + "care, refined styling, and thoughtful timing come together in an elevated appointment experience.",
+    "MAH Esti is a solo beauty studio experience centered on esthetician services, flexible booking, and elevated client care.",
+    "A boutique booking experience for a solo esthetician offering flexible services, intake history, and thoughtful follow-up.",
   ],
   cancellations: [
     "Please cancel or reschedule at least 24 hours before your appointment to avoid a cancellation fee.",
@@ -36,7 +41,9 @@ const legacyPlaceholderCopy = Object.freeze({
     "Deposit support is included in the platform and can be enabled later as the business grows.",
   ],
   expectationsNotes: [
-    "Arrive with detangled hair unless your chosen service includes preparation. Please review your service notes before booking.",
+    "Please arrive with " + "hair ready for your selected service unless prep is included. Review any service notes before booking so your visit begins smoothly.",
+    "Arrive with de" + "tangled " + "hair unless your chosen service includes preparation. Please review your service notes before booking.",
+    "Please review your prep notes before booking and share any skin concerns, allergies, or recent treatments in your intake form.",
   ],
   confirmationMessages: [
     "Your appointment request has been received. You'll see updates here as it moves from pending to confirmed.",
@@ -107,17 +114,17 @@ function buildDefaultWeeklyHours() {
 function buildDefaultBusinessSettings() {
   return {
     key: "default",
-    businessName: "MAH Booking",
+    businessName: "MAH Esti",
     tagline: defaultBusinessCopy.tagline,
     description: defaultBusinessCopy.description,
-    contactEmail: "hello@mahbooking.com",
+    contactEmail: "hello@mahesti.com",
     contactPhone: "(555) 274-5612",
     address: "Atlanta, GA",
     policies: {
       ...defaultBusinessCopy.policies,
     },
     socialLinks: {
-      instagram: "https://instagram.com/mahbooking",
+      instagram: "https://instagram.com/mahesti",
       facebook: "",
       tiktok: "",
     },
@@ -134,7 +141,7 @@ function buildDefaultBusinessSettings() {
       neutralColor: "#f7efe8",
       logoUrl: "",
       heroImageUrl:
-        "https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+Booking",
+        "https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+Esti",
     },
   };
 }
@@ -153,6 +160,48 @@ async function refreshLegacyBusinessCopy(settings) {
 
   if (!settings.bookingSettings) {
     settings.bookingSettings = {};
+  }
+
+  if (!settings.socialLinks) {
+    settings.socialLinks = {};
+  }
+
+  if (!settings.branding) {
+    settings.branding = {};
+  }
+
+  if (["MAH " + "Booking"].includes(settings.businessName)) {
+    settings.businessName = defaults.businessName;
+    changed = true;
+  }
+
+  if (["hello@mah" + "booking.com"].includes(settings.contactEmail)) {
+    settings.contactEmail = defaults.contactEmail;
+    changed = true;
+  }
+
+  if (["https://instagram.com/mah" + "booking"].includes(settings.socialLinks.instagram)) {
+    settings.socialLinks.instagram = defaults.socialLinks.instagram;
+    changed = true;
+  }
+
+  if (["https://facebook.com/mah" + "booking"].includes(settings.socialLinks.facebook)) {
+    settings.socialLinks.facebook = defaults.socialLinks.facebook;
+    changed = true;
+  }
+
+  if (["https://tiktok.com/@mah" + "booking"].includes(settings.socialLinks.tiktok)) {
+    settings.socialLinks.tiktok = defaults.socialLinks.tiktok;
+    changed = true;
+  }
+
+  if (
+    ["https://placehold.co/1440x1600/f3e9df/2f2622?text=MAH+" + "Booking"].includes(
+      settings.branding.heroImageUrl,
+    )
+  ) {
+    settings.branding.heroImageUrl = defaults.branding.heroImageUrl;
+    changed = true;
   }
 
   if (legacyPlaceholderCopy.taglines.includes(settings.tagline)) {

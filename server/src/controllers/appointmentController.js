@@ -22,16 +22,36 @@ async function syncClientProfile({
   phone,
   notes,
   internalNotes,
+  intakeAnswers,
   status,
   startAt,
 }) {
+  const [firstName = "", ...lastNameParts] = name.trim().split(" ");
   const increment = status === "no-show" ? { noShowCount: 1 } : null;
   const update = {
     name,
+    firstName,
+    lastName: lastNameParts.join(" "),
     email,
     phone,
     lastAppointmentAt: startAt,
   };
+
+  if (intakeAnswers?.skinType) {
+    update.skinType = intakeAnswers.skinType;
+  }
+
+  if (intakeAnswers?.skinConcerns) {
+    update.skinConcerns = intakeAnswers.skinConcerns;
+  }
+
+  if (intakeAnswers?.allergies) {
+    update.allergies = intakeAnswers.allergies;
+  }
+
+  if (intakeAnswers?.currentSkincareRoutine) {
+    update.currentSkincareRoutine = intakeAnswers.currentSkincareRoutine;
+  }
 
   if (notes !== undefined) {
     update.notes = notes;
@@ -84,6 +104,8 @@ async function resolveServiceSnapshot(serviceId, options = {}) {
       durationMinutes: service.durationMinutes,
       bufferMinutes: service.bufferMinutes,
       imageUrl: service.imageUrl,
+      requiresDeposit: service.requiresDeposit,
+      depositAmount: service.depositAmount,
     },
   };
 }
@@ -211,6 +233,7 @@ async function createAppointment(req, res) {
     startTime,
     notes,
     internalNotes,
+    intakeAnswers,
     status,
   } = req.body;
   const availability = await ensureAvailability();
@@ -260,6 +283,7 @@ async function createAppointment(req, res) {
     phone: clientPhone,
     notes,
     internalNotes: isAdminRequest ? internalNotes : undefined,
+    intakeAnswers,
     status: isAdminRequest ? status : undefined,
     startAt: slot.startAt,
   });
@@ -282,6 +306,7 @@ async function createAppointment(req, res) {
     status: isAdminRequest ? status || "confirmed" : "pending",
     notes,
     internalNotes: isAdminRequest ? internalNotes || "" : "",
+    intakeAnswers,
     source: isAdminRequest ? "admin" : "client",
   });
 
@@ -405,6 +430,12 @@ async function updateAppointment(req, res) {
   if (isAdmin && req.body.internalNotes !== undefined) {
     appointment.internalNotes = req.body.internalNotes;
   }
+  if (req.body.intakeAnswers !== undefined) {
+    appointment.intakeAnswers = {
+      ...appointment.intakeAnswers?.toObject?.(),
+      ...req.body.intakeAnswers,
+    };
+  }
   if (req.body.status) {
     appointment.status = req.body.status;
   }
@@ -418,6 +449,7 @@ async function updateAppointment(req, res) {
     phone: appointment.clientPhone,
     notes: appointment.notes,
     internalNotes: appointment.internalNotes,
+    intakeAnswers: appointment.intakeAnswers,
     status: appointment.status,
     startAt: appointment.startAt,
   });
@@ -442,6 +474,7 @@ async function updateAppointmentStatus(req, res) {
     phone: appointment.clientPhone,
     notes: appointment.notes,
     internalNotes: appointment.internalNotes,
+    intakeAnswers: appointment.intakeAnswers,
     status: appointment.status,
     startAt: appointment.startAt,
   });

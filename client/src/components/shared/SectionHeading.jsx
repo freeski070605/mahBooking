@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+const MotionDiv = motion.div;
+
 export function SectionHeading({
   eyebrow,
   title,
@@ -9,7 +11,7 @@ export function SectionHeading({
   className,
 }) {
   return (
-    <motion.div
+    <MotionDiv
       className={cn(
         "space-y-4",
         align === "center" && "mx-auto max-w-2xl text-center",
@@ -33,6 +35,6 @@ export function SectionHeading({
           </p>
         ) : null}
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

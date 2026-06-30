@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Scissors, Trash2 } from "lucide-react";
+import { Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { servicesApi } from "@/lib/api";
 import { formatCurrency, formatDuration, getErrorMessage } from "@/lib/utils";
@@ -18,13 +18,21 @@ import { Textarea } from "@/components/ui/textarea";
 
 const emptyService = {
   name: "",
-  category: "Signature Styling",
+  category: "Facials",
+  shortDescription: "",
+  fullDescription: "",
   description: "",
-  price: 120,
-  durationMinutes: 90,
+  price: 85,
+  durationMinutes: 60,
   bufferMinutes: 15,
   imageUrl: "",
   imagePublicId: "",
+  requiresDeposit: false,
+  depositAmount: 0,
+  prepInstructions: "",
+  aftercareInstructions: "",
+  contraindications: "",
+  consultationRequired: false,
   isActive: true,
   displayOrder: 0,
   featured: false,
@@ -101,7 +109,10 @@ export function AdminServicesPage() {
   function openEdit(service) {
     setEditingService(service);
     setDraft({
+      ...emptyService,
       ...service,
+      shortDescription: service.shortDescription || service.description || "",
+      fullDescription: service.fullDescription || service.description || "",
     });
     setOpen(true);
   }
@@ -109,15 +120,21 @@ export function AdminServicesPage() {
   function submitService(event) {
     event.preventDefault();
 
-    if (!draft.name || !draft.category || !draft.description) {
-      toast.error("Please fill in the service name, category, and description.");
+    if (!draft.name || !draft.category || !draft.shortDescription) {
+      toast.error("Please fill in the service name, category, and short description.");
       return;
     }
 
+    const payload = {
+      ...draft,
+      description: draft.shortDescription,
+      depositAmount: draft.requiresDeposit ? Number(draft.depositAmount || 0) : 0,
+    };
+
     if (editingService) {
-      updateMutation.mutate({ id: editingService._id, payload: draft });
+      updateMutation.mutate({ id: editingService._id, payload });
     } else {
-      createMutation.mutate(draft);
+      createMutation.mutate(payload);
     }
   }
 
@@ -131,7 +148,7 @@ export function AdminServicesPage() {
             </p>
             <h1 className="mt-2 font-display text-5xl text-ink-900">Manage the service menu</h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-700/70">
-              Keep images, pricing, timing, and featured services up to date without digging through complicated controls.
+              Keep images, pricing, timing, deposits, prep notes, and aftercare simple to update as the service menu evolves.
             </p>
           </div>
           <Button onClick={openCreate}>
@@ -165,7 +182,9 @@ export function AdminServicesPage() {
                       {service.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </div>
-                  <p className="text-sm leading-7 text-ink-700/75">{service.description}</p>
+                  <p className="text-sm leading-7 text-ink-700/75">
+                    {service.shortDescription || service.description}
+                  </p>
                   <div className="grid gap-3 text-sm text-ink-700/70 sm:grid-cols-3">
                     <div>
                       <p className="font-semibold text-ink-900">{formatCurrency(service.price)}</p>
@@ -178,8 +197,10 @@ export function AdminServicesPage() {
                       <p>Duration</p>
                     </div>
                     <div>
-                      <p className="font-semibold text-ink-900">{service.displayOrder}</p>
-                      <p>Display order</p>
+                      <p className="font-semibold text-ink-900">
+                        {service.requiresDeposit ? formatCurrency(service.depositAmount || 0) : "No"}
+                      </p>
+                      <p>Deposit</p>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -222,7 +243,7 @@ export function AdminServicesPage() {
         </div>
       ) : (
         <EmptyState
-          icon={Scissors}
+          icon={Sparkles}
           title="No services yet"
           description="Start by adding your first service with a price, duration, and image so clients can book with confidence."
           actionLabel="Add first service"
@@ -235,7 +256,7 @@ export function AdminServicesPage() {
           <DialogHeader>
             <DialogTitle>{editingService ? "Edit service" : "Add a new service"}</DialogTitle>
             <DialogDescription>
-              Use plain, client-friendly wording. The image and summary here are what clients will see when booking.
+              Use plain, client-friendly wording. Everything here can be changed later as the final menu comes together.
             </DialogDescription>
           </DialogHeader>
           <form className="space-y-6" onSubmit={submitService}>
@@ -325,16 +346,99 @@ export function AdminServicesPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="service-description">Description</Label>
+                  <Label htmlFor="service-short-description">Short description</Label>
                   <Textarea
-                    id="service-description"
-                    value={draft.description}
+                    id="service-short-description"
+                    value={draft.shortDescription}
                     onChange={(event) =>
-                      setDraft((current) => ({ ...current, description: event.target.value }))
+                      setDraft((current) => ({ ...current, shortDescription: event.target.value }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="service-full-description">Full description</Label>
+                  <Textarea
+                    id="service-full-description"
+                    value={draft.fullDescription}
+                    onChange={(event) =>
+                      setDraft((current) => ({ ...current, fullDescription: event.target.value }))
                     }
                   />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
+                    <div>
+                      <p className="font-semibold text-ink-900">Deposit required</p>
+                      <p className="text-sm text-ink-700/65">Show a deposit amount for this service.</p>
+                    </div>
+                    <Switch
+                      checked={draft.requiresDeposit}
+                      onCheckedChange={(value) =>
+                        setDraft((current) => ({ ...current, requiresDeposit: value }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="service-deposit">Deposit amount</Label>
+                    <Input
+                      id="service-deposit"
+                      type="number"
+                      disabled={!draft.requiresDeposit}
+                      value={draft.depositAmount}
+                      onChange={(event) =>
+                        setDraft((current) => ({
+                          ...current,
+                          depositAmount: Number(event.target.value),
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="service-prep">Prep instructions</Label>
+                    <Textarea
+                      id="service-prep"
+                      value={draft.prepInstructions}
+                      onChange={(event) =>
+                        setDraft((current) => ({ ...current, prepInstructions: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="service-aftercare">Aftercare instructions</Label>
+                    <Textarea
+                      id="service-aftercare"
+                      value={draft.aftercareInstructions}
+                      onChange={(event) =>
+                        setDraft((current) => ({ ...current, aftercareInstructions: event.target.value }))
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="service-contraindications">Contraindications or important warnings</Label>
+                  <Textarea
+                    id="service-contraindications"
+                    value={draft.contraindications}
+                    onChange={(event) =>
+                      setDraft((current) => ({ ...current, contraindications: event.target.value }))
+                    }
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
+                    <div>
+                      <p className="font-semibold text-ink-900">Consultation required</p>
+                      <p className="text-sm text-ink-700/65">Mark services that need a consult first.</p>
+                    </div>
+                    <Switch
+                      checked={draft.consultationRequired}
+                      onCheckedChange={(value) =>
+                        setDraft((current) => ({ ...current, consultationRequired: value }))
+                      }
+                    />
+                  </div>
                   <div className="flex items-center justify-between rounded-[1.4rem] bg-surface-50 p-4">
                     <div>
                       <p className="font-semibold text-ink-900">Featured service</p>

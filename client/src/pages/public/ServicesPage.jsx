@@ -32,8 +32,8 @@ export function ServicesPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <PageIntro
           eyebrow="Service menu"
-          title="Services chosen with healthy hair and polished finishes in mind."
-          description="Browse the current menu, compare timing and pricing, and choose the appointment that fits the care or look you're after."
+          title="Explore skin care, waxing, brows, lashes, and add-ons."
+          description="Browse the current editable menu, compare timing and pricing, and choose the appointment that fits your skin goals."
         />
         <div className="w-full max-w-xs">
           <Select value={category} onValueChange={setCategory}>
@@ -62,7 +62,7 @@ export function ServicesPage() {
           {filteredServices.map((service) => (
             <Card key={service._id} className="overflow-hidden">
               <img
-                src={service.imageUrl}
+                src={service.imageUrl || "https://placehold.co/900x1200/f7ede7/372d2a?text=MAH+Esti"}
                 alt={service.name}
                 className="aspect-[4/4.8] w-full object-cover"
               />
@@ -78,7 +78,19 @@ export function ServicesPage() {
                     {formatCurrency(service.price)}
                   </p>
                 </div>
-                <p className="text-sm leading-7 text-ink-700/75">{service.description}</p>
+                <p className="text-sm leading-7 text-ink-700/75">
+                  {service.shortDescription || service.description}
+                </p>
+                {service.consultationRequired ? (
+                  <p className="text-sm font-semibold text-surface-700">
+                    Consultation recommended before booking.
+                  </p>
+                ) : null}
+                {service.requiresDeposit ? (
+                  <p className="text-sm text-ink-700/65">
+                    Deposit: {formatCurrency(service.depositAmount || 0)}
+                  </p>
+                ) : null}
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1 text-sm text-ink-700/65">
                     <p>{formatDuration(service.durationMinutes)}</p>

@@ -1,10 +1,9 @@
 import {
   CalendarDays,
   Clock3,
-  Grid2x2,
   Images,
   LayoutDashboard,
-  Scissors,
+  Plus,
   Settings,
   Sparkles,
   Users,
@@ -22,7 +21,7 @@ export const publicNavigation = [
 export const adminNavigation = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Appointments", href: "/admin/appointments", icon: CalendarDays },
-  { label: "Services", href: "/admin/services", icon: Scissors },
+  { label: "Services", href: "/admin/services", icon: Sparkles },
   { label: "Gallery", href: "/admin/gallery", icon: Images },
   { label: "Availability", href: "/admin/availability", icon: Clock3 },
   { label: "Clients", href: "/admin/clients", icon: Users },
@@ -30,54 +29,48 @@ export const adminNavigation = [
 ];
 
 export const highlightFeatures = [
-  "Healthy hair-first service details",
+  "Editable skin-care service details",
   "Live availability without the back-and-forth",
-  "A calm, polished studio experience",
+  "Intake and aftercare notes in one place",
 ];
 
 export const dashboardQuickActions = [
   {
     label: "Add Service",
     href: "/admin/services",
-    icon: Scissors,
-    hint: "Create a new service with pricing, timing, and an image.",
+    icon: Sparkles,
+    hint: "Create a service with pricing, timing, intake notes, and an image.",
   },
   {
-    label: "Upload Gallery",
-    href: "/admin/gallery",
-    icon: Images,
-    hint: "Share finished work with a caption and category.",
+    label: "Add Customer",
+    href: "/admin/clients",
+    icon: Plus,
+    hint: "Create a customer profile with contact details and skin notes.",
   },
   {
-    label: "Block Time",
-    href: "/admin/availability",
-    icon: Clock3,
-    hint: "Mark school, travel, or personal time in a few taps.",
-  },
-  {
-    label: "View Calendar",
+    label: "View Bookings",
     href: "/admin/appointments",
-    icon: Grid2x2,
-    hint: "Check today's appointments and update statuses quickly.",
+    icon: CalendarDays,
+    hint: "Review pending requests, details, intake answers, and statuses.",
   },
 ];
 
 export const experiencePillars = [
   {
-    name: "Healthy hair first",
+    name: "Skin care first",
     description:
-      "Every appointment is grounded in care, condition, and a finish that keeps your hair looking and feeling its best.",
+      "Every appointment is grounded in clear skin goals, thoughtful prep, and aftercare that supports the client beyond the visit.",
   },
   {
-    name: "Calm from booking to chair",
+    name: "Calm from booking to treatment",
     description:
       "Clear timing, easy booking, and thoughtful communication help the full experience feel effortless.",
   },
 ];
 
 export const brandTagline = {
-  title: "Healthy hair care, polished styling, and a calm studio rhythm.",
+  title: "Personalized esthetician care with a calm studio rhythm.",
   description:
-    "MAH Booking pairs warm beauty branding with clear service details and an easy booking path clients can trust.",
+    "MAH Esti pairs warm beauty branding with flexible service management, intake history, and an easy booking path clients can trust.",
   icon: Sparkles,
 };

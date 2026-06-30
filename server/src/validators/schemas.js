@@ -20,16 +20,42 @@ const authLoginSchema = z.object({
 const serviceSchema = z.object({
   name: z.string().trim().min(2),
   category: z.string().trim().min(2),
-  description: z.string().trim().min(10),
+  shortDescription: z.string().trim().min(10),
+  fullDescription: z.string().trim().optional().default(""),
+  description: z.string().trim().optional().default(""),
   price: z.coerce.number().min(0),
   durationMinutes: z.coerce.number().int().min(15),
   bufferMinutes: z.coerce.number().int().min(0).default(0),
   imageUrl: z.string().trim().optional().default(""),
   imagePublicId: z.string().trim().optional().default(""),
+  requiresDeposit: z.coerce.boolean().optional().default(false),
+  depositAmount: z.coerce.number().min(0).optional().default(0),
+  prepInstructions: z.string().trim().optional().default(""),
+  aftercareInstructions: z.string().trim().optional().default(""),
+  contraindications: z.string().trim().optional().default(""),
+  consultationRequired: z.coerce.boolean().optional().default(false),
   isActive: z.coerce.boolean().optional().default(true),
   displayOrder: z.coerce.number().int().min(0).optional().default(0),
   featured: z.coerce.boolean().optional().default(false),
 });
+
+const intakeAnswersSchema = z
+  .object({
+    firstTimeClient: z.string().trim().optional().default(""),
+    skinType: z.string().trim().optional().default(""),
+    skinConcerns: z.string().trim().optional().default(""),
+    allergies: z.string().trim().optional().default(""),
+    currentSkincareRoutine: z.string().trim().optional().default(""),
+    retinolUse: z.string().trim().optional().default(""),
+    accutaneUse: z.string().trim().optional().default(""),
+    recentWaxing: z.string().trim().optional().default(""),
+    recentChemicalPeels: z.string().trim().optional().default(""),
+    pregnancyStatus: z.string().trim().optional().default(""),
+    appointmentGoals: z.string().trim().optional().default(""),
+    notes: z.string().trim().optional().default(""),
+  })
+  .optional()
+  .default({});
 
 const gallerySchema = z.object({
   title: z.string().trim().optional().default(""),
@@ -50,6 +76,7 @@ const appointmentCreateSchema = z.object({
   startTime: z.string().regex(timeRegex),
   notes: z.string().trim().optional().default(""),
   internalNotes: z.string().trim().optional().default(""),
+  intakeAnswers: intakeAnswersSchema,
   status: z.enum(APPOINTMENT_STATUSES).optional().default("pending"),
 });
 
@@ -62,11 +89,28 @@ const appointmentUpdateSchema = z.object({
   startTime: z.string().regex(timeRegex).optional(),
   notes: z.string().trim().optional(),
   internalNotes: z.string().trim().optional(),
+  intakeAnswers: intakeAnswersSchema,
   status: z.enum(APPOINTMENT_STATUSES).optional(),
 });
 
 const appointmentStatusSchema = z.object({
   status: z.enum(APPOINTMENT_STATUSES),
+});
+
+const clientSchema = z.object({
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().optional().default(""),
+  phone: z.string().trim().optional().default(""),
+  email: z.string().trim().email().optional().or(z.literal("")).default(""),
+  birthday: z.string().trim().optional().or(z.literal("")).default(""),
+  skinType: z.string().trim().optional().default(""),
+  skinConcerns: z.string().trim().optional().default(""),
+  allergies: z.string().trim().optional().default(""),
+  currentSkincareRoutine: z.string().trim().optional().default(""),
+  notes: z.string().trim().optional().default(""),
+  internalNotes: z.string().trim().optional().default(""),
+  tags: z.array(z.string().trim()).optional().default([]),
+  isFlagged: z.coerce.boolean().optional().default(false),
 });
 
 const slotsQuerySchema = z.object({
@@ -165,6 +209,7 @@ module.exports = {
   appointmentStatusSchema,
   appointmentUpdateSchema,
   availabilitySchema,
+  clientSchema,
   gallerySchema,
   serviceSchema,
   settingsSchema,

@@ -16,15 +16,11 @@ const BLOCKING_APPOINTMENT_STATUSES = [
 const USER_ROLES = ["admin", "client"];
 
 const SERVICE_CATEGORIES = [
-  "Signature Styling",
-  "Color",
-  "Treatments",
-  "Protective Styles",
-  "Bridal",
-  "Scalp Care",
   "Facials",
-  "Brows",
   "Waxing",
+  "Brows & Lashes",
+  "Consultations",
+  "Add-Ons",
 ];
 
 module.exports = {

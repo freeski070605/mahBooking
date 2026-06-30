@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { appointmentsApi, servicesApi } from "@/lib/api";
 import {
   formatAppointmentLabel,
+  formatCurrency,
+  formatDuration,
   formatLongDate,
   formatTimeLabel,
   getErrorMessage,
@@ -328,6 +330,10 @@ export function AdminAppointmentsPage() {
                           <p className="text-sm text-ink-700/70">
                             {appointment.serviceSnapshot.name}
                           </p>
+                          <p className="text-sm text-ink-700/70">
+                            {formatCurrency(appointment.serviceSnapshot.price || 0)} -{" "}
+                            {formatDuration(appointment.serviceSnapshot.durationMinutes || 0)}
+                          </p>
                         </div>
                         <div className="grid gap-2 text-sm text-ink-700/70 md:grid-cols-2">
                           <p>{formatAppointmentLabel(appointment.startAt)}</p>
@@ -337,6 +343,23 @@ export function AdminAppointmentsPage() {
                             <p>Client note: {appointment.notes}</p>
                           ) : null}
                         </div>
+                        {appointment.intakeAnswers ? (
+                          <div className="rounded-[1.4rem] bg-surface-50 p-4 text-sm leading-6 text-ink-700/75">
+                            <p className="font-semibold text-ink-900">Intake answers</p>
+                            <div className="mt-2 grid gap-2 md:grid-cols-2">
+                              <p>First-time client: {appointment.intakeAnswers.firstTimeClient || "Not answered"}</p>
+                              <p>Skin type: {appointment.intakeAnswers.skinType || "Not answered"}</p>
+                              <p>Skin concerns: {appointment.intakeAnswers.skinConcerns || "Not answered"}</p>
+                              <p>Allergies: {appointment.intakeAnswers.allergies || "Not answered"}</p>
+                              <p>Retinol: {appointment.intakeAnswers.retinolUse || "Not answered"}</p>
+                              <p>Accutane: {appointment.intakeAnswers.accutaneUse || "Not answered"}</p>
+                              <p>Recent waxing: {appointment.intakeAnswers.recentWaxing || "Not answered"}</p>
+                              <p>Recent peels: {appointment.intakeAnswers.recentChemicalPeels || "Not answered"}</p>
+                              <p>Pregnancy status: {appointment.intakeAnswers.pregnancyStatus || "Not answered"}</p>
+                              <p>Goals: {appointment.intakeAnswers.appointmentGoals || "Not answered"}</p>
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                       <div className="flex flex-wrap gap-3">
                         <Button

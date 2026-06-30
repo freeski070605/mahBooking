@@ -6,7 +6,7 @@ async function start() {
   await connectDb();
 
   app.listen(env.port, () => {
-    console.log(`MAH Booking API listening on port ${env.port}`);
+    console.log(`MAH Esti API listening on port ${env.port}`);
   });
 }
 

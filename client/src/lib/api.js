@@ -77,8 +77,11 @@ export const uploadsApi = {
 };
 
 export const clientsApi = {
-  list: () => api.get("/clients").then(unwrap),
+  list: (params = {}) => api.get("/clients", { params }).then(unwrap),
   get: (id) => api.get(`/clients/${id}`).then(unwrap),
+  create: (payload) => api.post("/clients", payload).then(unwrap),
+  update: (id, payload) => api.put(`/clients/${id}`, payload).then(unwrap),
+  remove: (id) => api.delete(`/clients/${id}`).then(unwrap),
 };
 
 export const dashboardApi = {

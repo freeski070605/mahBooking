@@ -35,6 +35,17 @@ const bookingSchema = z.object({
   clientName: z.string().trim().min(2, "Please enter your name."),
   clientEmail: z.string().trim().email("Enter a valid email."),
   clientPhone: z.string().trim().min(7, "Enter a valid phone number."),
+  firstTimeClient: z.string().trim().optional(),
+  skinType: z.string().trim().optional(),
+  skinConcerns: z.string().trim().optional(),
+  allergies: z.string().trim().optional(),
+  currentSkincareRoutine: z.string().trim().optional(),
+  retinolUse: z.string().trim().optional(),
+  accutaneUse: z.string().trim().optional(),
+  recentWaxing: z.string().trim().optional(),
+  recentChemicalPeels: z.string().trim().optional(),
+  pregnancyStatus: z.string().trim().optional(),
+  appointmentGoals: z.string().trim().optional(),
   notes: z.string().trim().optional(),
 });
 
@@ -79,8 +90,10 @@ export function BookingPage() {
       );
 
       if (match) {
-        setSelectedService(match);
-        setStep(2);
+        queueMicrotask(() => {
+          setSelectedService(match);
+          setStep(2);
+        });
       }
     }
   }, [location.state, servicesQuery.data]);
@@ -96,6 +109,17 @@ export function BookingPage() {
       clientName: user?.name || "",
       clientEmail: user?.email || "",
       clientPhone: user?.phone || "",
+      firstTimeClient: "",
+      skinType: "",
+      skinConcerns: "",
+      allergies: "",
+      currentSkincareRoutine: "",
+      retinolUse: "",
+      accutaneUse: "",
+      recentWaxing: "",
+      recentChemicalPeels: "",
+      pregnancyStatus: "",
+      appointmentGoals: "",
       notes: "",
     },
   });
@@ -105,6 +129,17 @@ export function BookingPage() {
       clientName: user?.name || "",
       clientEmail: user?.email || "",
       clientPhone: user?.phone || "",
+      firstTimeClient: "",
+      skinType: "",
+      skinConcerns: "",
+      allergies: "",
+      currentSkincareRoutine: "",
+      retinolUse: "",
+      accutaneUse: "",
+      recentWaxing: "",
+      recentChemicalPeels: "",
+      pregnancyStatus: "",
+      appointmentGoals: "",
       notes: "",
     });
   }, [reset, user]);
@@ -145,11 +180,27 @@ export function BookingPage() {
     }
 
     bookMutation.mutate({
-      ...values,
+      clientName: values.clientName,
+      clientEmail: values.clientEmail,
+      clientPhone: values.clientPhone,
       serviceId: selectedService._id,
       date: selectedDate,
       startTime: selectedSlot.startTime,
       notes: values.notes || "",
+      intakeAnswers: {
+        firstTimeClient: values.firstTimeClient || "",
+        skinType: values.skinType || "",
+        skinConcerns: values.skinConcerns || "",
+        allergies: values.allergies || "",
+        currentSkincareRoutine: values.currentSkincareRoutine || "",
+        retinolUse: values.retinolUse || "",
+        accutaneUse: values.accutaneUse || "",
+        recentWaxing: values.recentWaxing || "",
+        recentChemicalPeels: values.recentChemicalPeels || "",
+        pregnancyStatus: values.pregnancyStatus || "",
+        appointmentGoals: values.appointmentGoals || "",
+        notes: values.notes || "",
+      },
     });
   }
 
@@ -159,7 +210,7 @@ export function BookingPage() {
         <PageIntro
           eyebrow="Booking"
           title="Book in a few easy steps."
-          description="Choose your service, pick from live availability, and send your request without the usual back-and-forth."
+          description="Choose your service, pick from live availability, complete intake, and send your request without the usual back-and-forth."
         />
         <div className="glass-panel p-6">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -213,7 +264,7 @@ export function BookingPage() {
                   className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/85 text-left shadow-panel transition hover:-translate-y-1"
                 >
                   <img
-                    src={service.imageUrl}
+                    src={service.imageUrl || "https://placehold.co/900x1200/f7ede7/372d2a?text=MAH+Esti"}
                     alt={service.name}
                     className="aspect-[4/4.8] w-full object-cover"
                   />
@@ -232,7 +283,7 @@ export function BookingPage() {
                       </p>
                     </div>
                     <p className="text-sm leading-7 text-ink-700/75">
-                      {service.description}
+                      {service.shortDescription || service.description}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-ink-700/65">
                       <span className="inline-flex items-center gap-2">
@@ -261,7 +312,7 @@ export function BookingPage() {
                 Back to services
               </Button>
               <img
-                src={selectedService.imageUrl}
+                src={selectedService.imageUrl || "https://placehold.co/900x1200/f7ede7/372d2a?text=MAH+Esti"}
                 alt={selectedService.name}
                 className="aspect-[4/4.7] w-full rounded-[1.6rem] object-cover"
               />
@@ -273,8 +324,27 @@ export function BookingPage() {
                   {selectedService.name}
                 </h2>
                 <p className="text-sm leading-7 text-ink-700/75">
-                  {selectedService.description}
+                  {selectedService.fullDescription ||
+                    selectedService.shortDescription ||
+                    selectedService.description}
                 </p>
+                {selectedService.requiresDeposit ? (
+                  <p className="text-sm text-ink-700/70">
+                    Deposit: {formatCurrency(selectedService.depositAmount || 0)}
+                  </p>
+                ) : null}
+                {selectedService.prepInstructions ? (
+                  <div className="rounded-[1.4rem] bg-surface-50 p-4 text-sm leading-6 text-ink-700/75">
+                    <p className="font-semibold text-ink-900">Prep</p>
+                    <p>{selectedService.prepInstructions}</p>
+                  </div>
+                ) : null}
+                {selectedService.contraindications ? (
+                  <div className="rounded-[1.4rem] bg-rose-50 p-4 text-sm leading-6 text-rose-800">
+                    <p className="font-semibold">Important notes</p>
+                    <p>{selectedService.contraindications}</p>
+                  </div>
+                ) : null}
                 <div className="flex items-center justify-between text-sm text-ink-700/65">
                   <span>{formatDuration(selectedService.durationMinutes)}</span>
                   <span>{formatCurrency(selectedService.price)}</span>
@@ -416,6 +486,62 @@ export function BookingPage() {
                       {errors.clientEmail.message}
                     </p>
                   ) : null}
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstTimeClient">First-time client?</Label>
+                    <Input id="firstTimeClient" placeholder="Yes, no, or not sure" {...register("firstTimeClient")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="skinType">Skin type</Label>
+                    <Input id="skinType" placeholder="Dry, oily, combo, sensitive..." {...register("skinType")} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="skinConcerns">Skin concerns</Label>
+                  <Textarea
+                    id="skinConcerns"
+                    placeholder="Acne, dryness, hyperpigmentation, texture, sensitivity..."
+                    {...register("skinConcerns")}
+                  />
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="allergies">Allergies</Label>
+                    <Textarea id="allergies" placeholder="List any allergies or sensitivities." {...register("allergies")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSkincareRoutine">Current skincare routine</Label>
+                    <Textarea id="currentSkincareRoutine" placeholder="Cleanser, moisturizers, actives, prescriptions..." {...register("currentSkincareRoutine")} />
+                  </div>
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="retinolUse">Retinol use</Label>
+                    <Input id="retinolUse" placeholder="Yes/no and when last used" {...register("retinolUse")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="accutaneUse">Accutane use</Label>
+                    <Input id="accutaneUse" placeholder="Current, past, or never" {...register("accutaneUse")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="recentWaxing">Recent waxing</Label>
+                    <Input id="recentWaxing" placeholder="Area and date if recent" {...register("recentWaxing")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="recentChemicalPeels">Recent chemical peels</Label>
+                    <Input id="recentChemicalPeels" placeholder="Type and date if recent" {...register("recentChemicalPeels")} />
+                  </div>
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="pregnancyStatus">Pregnancy status, if relevant</Label>
+                    <Input id="pregnancyStatus" placeholder="Optional" {...register("pregnancyStatus")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="appointmentGoals">Appointment goals</Label>
+                    <Input id="appointmentGoals" placeholder="Glow, hydration, clearing, maintenance..." {...register("appointmentGoals")} />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="notes">Appointment notes</Label>
